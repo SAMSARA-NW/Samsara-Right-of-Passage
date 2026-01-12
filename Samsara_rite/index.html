@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Samsara — A Monastery with Projects</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+
+    <!-- PORTAL OVERLAY -->
+
+
+<!-- COVER PAGE PORTAL -->
+<article class="page cover">
+    <div class="particles" id="particles"></div>
+    <section class="cover-inner">
+        <h1 class="cover-title">Samsara</h1>
+        <p class="cover-subtitle">Co-creating A New Earth From Ancient Wisdom</p>
+        <div class="cover-mark"></div>
+    </section>
+</article>
+
+<article class="page preamble">
+    <div class="page-inner">
+        <h2 class="page-title">Welcome, Traveller</h2>
+            
+                <p class="body-text">
+                    Relearn how humans live, build, and create together in reciprocity with land, time, and each other.
+                </p>     
+    </div>
+</article>
+
+<article class="page core-intention">
+    <div class="page-inner">
+        <h2 class="page-title">Our Core Intention</h2>
+        <p class="body-text">
+            Samsara exists to build a space where hearts and minds are free to contribute, collaborate, and innovate. 
+            Every participant, every voice, every act of creation flows into the collective, forming a living ecosystem 
+            of nurturing our land, community, and spirit.
+        </p>
+    </div>
+</article>
+
+<article class="page vision">
+    <div class="page-inner">
+        <h2 class="page-title">The Journey Ahead</h2>
+        <p class="body-text">
+            You are invited to move slowly, explore intentionally, and engage with the projects that call to your heart. 
+            Samsara is a space where learning is living, and living is learning. Together, we shape our future.
+        </p>
+    </div>
+</article>
+
+<article class="page portal-entry">
+    <div class="page-inner">
+        <p class="intro-text">Enter The Void.</p>
+        <div class="button-wrapper">
+            <div id="portal-overlay"></div>
+            <button id="enter-portal" class="enter-button">Enter</button>
+        </div>
+    </div>
+</article>
+
+<!-- MANUSCRIPT -->
+<main id="manuscript">
+
+   
+
+   
+
+</main>
+
+<script src="render/particles.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    
+        /* =========================
+           COVER PARALLAX
+        ========================== */
+        const coverInner = document.querySelector('.cover-inner');
+        const cover = document.querySelector('.cover');
+    
+        if (coverInner && cover) {
+            cover.addEventListener('mousemove', e => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                coverInner.style.transform =
+                    `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+            });
+    
+            cover.addEventListener('mouseleave', () => {
+                coverInner.style.transform = `translate(-50%, -50%)`;
+            });
+        }
+    
+        /* =========================
+           WORD SPLITTING
+        ========================== */
+        function splitWords(el) {
+            const text = el.textContent.trim();
+            el.textContent = "";
+            text.split(" ").forEach((word, index, arr) => {
+                const span = document.createElement("span");
+                span.textContent = word;
+                el.appendChild(span);
+                if (index < arr.length - 1) {
+                    el.appendChild(document.createTextNode(" "));
+                }
+            });
+        }
+    
+        document.querySelectorAll(
+            '.page-inner .page-title, .body-text, .portal-entry .intro-text'
+        ).forEach(splitWords);
+    
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll("span").forEach(span => {
+                        span.style.animation = "wordFade 1.2s ease forwards";
+                        span.style.animationDelay = `${Math.random()}s`;
+                    });
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+    
+        document.querySelectorAll('.page-inner').forEach(el => observer.observe(el));
+    
+        /* =========================
+           BUTTON CURSOR ATTRACTION
+        ========================== */
+        const button = document.getElementById('enter-portal');
+    
+        if (button) {
+            document.addEventListener('mousemove', (e) => {
+                const rect = button.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+    
+                const dx = e.clientX - centerX;
+                const dy = e.clientY - centerY;
+                const distance = Math.hypot(dx, dy);
+    
+                const maxDistance = 150;
+                const maxShift = 12;
+    
+                if (distance < maxDistance) {
+                    button.style.transform =
+                        `translate(${(dx / maxDistance) * maxShift}px,
+                                   ${(dy / maxDistance) * maxShift}px)`;
+                } else {
+                    button.style.transform = "translate(0, 0)";
+                }
+            });
+        }
+    
+        /* =========================
+           PORTAL TRANSITION CLICK
+        ========================== */
+        const overlay = document.getElementById('portal-overlay');
+    
+        if (button && overlay) {
+            button.addEventListener('click', () => {
+                document.body.classList.add('noscroll');
+                overlay.classList.add('active');
+    
+                setTimeout(() => {
+                    window.location.href = 'laws.html';
+                }, 1000);
+            });
+        }
+    
+    });
+    </script>
+    
+
+</body>
+</html>

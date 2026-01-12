@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Samsara — Reveal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --fg: #f5ebc8;
+      --muted: rgba(245,235,200,0.6);
+      --accent: rgba(245,235,200,0.9);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Inter", system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      overflow-x: hidden;
+    }
+
+    .void {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(245,235,200,0.03), transparent 70%);
+      z-index: 0;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      padding: 12vh 10vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .reveal {
+      max-width: 720px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 2.5s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 3.6rem);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5em;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 3em;
+    }
+
+    .archetype-image {
+      width: 100%;
+      max-width: 420px;
+      margin: 2.5em auto;
+      border-radius: 6px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      display: block;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: imageFade 2s ease forwards;
+    }
+
+    @keyframes imageFade {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .essence {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--accent);
+      margin-bottom: 3em;
+    }
+
+    .coherence {
+      margin-bottom: 3em;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .axes {
+      text-align: left;
+      margin: 0 auto 4em;
+      max-width: 520px;
+    }
+
+    .axis {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(245,235,200,0.15);
+      padding: 0.6em 0;
+      font-size: 0.85rem;
+    }
+
+    .axis span {
+      color: var(--muted);
+    }
+
+    .closing {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-top: 4em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="void"></div>
+
+  <main>
+    <section class="reveal" id="reveal"></section>
+  </main>
+
+  <!-- ARCHETYPE LOGIC -->
+  <script src="render/logic.js"></script>
+
+  <script>
+    const ARCHETYPE_TEXT = {
+      StoryWeaver: {
+        title: "The Story Weaver",
+        essence:
+          "You move through life by listening first. Meaning reveals itself to you slowly — through symbols, patterns, and quiet observation. You do not rush coherence; you allow it to arrive. Your presence invites others to see their lives as part of a larger narrative."
+      },
+      Catalyst: {
+        title: "The Catalyst",
+        essence:
+          "You bring momentum where stagnation lingers. Action clarifies truth for you. You are most alive in motion, initiating shifts others hesitate to begin. Your gift is ignition — even when it costs comfort or certainty."
+      },
+      Harmonizer: {
+        title: "The Harmonizer",
+        essence:
+          "You sense the emotional temperature of a space instinctively. You move to restore balance, often before conflict becomes visible. Your strength lies in connection, attunement, and the invisible labor of cohesion."
+      },
+      Steward: {
+        title: "The Steward",
+        essence:
+          "You carry responsibility with quiet dignity. You protect what is fragile, maintain what endures, and think in long arcs of time. Your power is reliability — often unseen, always essential."
+      },
+      Analyst: {
+        title: "The Analyst",
+        essence:
+          "You seek clarity beneath complexity. Systems, structures, and root causes draw your attention naturally. You create stability by understanding — even when others mistake your distance for detachment."
+      },
+      Alchemist: {
+        title: "The Alchemist",
+        essence:
+          "You are drawn to transformation. You sense when something must dissolve in order for something truer to emerge. You move comfortably through uncertainty, reshaping identity, meaning, and form."
+      },
+      Shapeshifter: {
+        title: "The Shapeshifter",
+        essence:
+          "You do not anchor yourself to a single form. You adapt, translate, and move between roles with fluid intelligence. Your strength lies in emergence — responding to what the moment asks rather than what history defines."
+      }
+    };
+
+    const AXIS_LABELS = {
+      E: "Expression",
+      D: "Decision",
+      M: "Meaning",
+      T: "Time",
+      R: "Relational",
+      S: "Stability",
+      I: "Identity"
+    };
+
+    // --- CALCULATE RESULT ---
+    const result = calculateArchetype();
+    const data = ARCHETYPE_TEXT[result.archetype];
+
+    // --- GET GENDER ---
+    const gender = localStorage.getItem("gender") || "male";
+
+    // --- IMAGE PATH ---
+    const archetypeKey = result.archetype.toLowerCase();
+    const imagePath = `assets/images/${archetypeKey}-${gender}.png`;
+
+    const container = document.getElementById("reveal");
+
+    container.innerHTML = `
+      <div class="subtitle">Your Archetype</div>
+      <h1>${data.title}</h1>
+
+      <img
+        class="archetype-image"
+        src="${imagePath}"
+        alt="${data.title} (${gender})"
+      >
+
+      <div class="coherence">
+        Coherence: ${(result.coherence * 100).toFixed(0)}%
+      </div>
+
+      <div class="essence">
+        ${data.essence}
+      </div>
+
+      <div class="axes">
+        ${Object.entries(result.axisProfile)
+          .map(([axis, val]) => `
+            <div class="axis">
+              <strong>${AXIS_LABELS[axis]}</strong>
+              <span>${val.toFixed(2)}</span>
+            </div>
+          `)
+          .join("")}
+      </div>
+
+      <div class="closing">
+        This archetype is not a limit — it is a lens.<br>
+        You may inhabit others over time.<br><br>
+        What matters is how consciously you carry this one.
+      </div>
+    `;
+  </script>
+
+</body>
+</html>

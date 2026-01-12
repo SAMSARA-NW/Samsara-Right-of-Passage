@@ -1,0 +1,469 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Earth Light Palette */
+    --bg: #f6f3ee;
+    --text-primary: #2b2b2b;
+    --text-muted: #6f6a63;
+    --accent-earth: #8a7f6d;
+    --accent-leaf: #6b7f5e;
+    --accent-sun: #c2a66d;
+
+    /* Portal Colors */
+    --portal-center: 240,235,220;
+    --portal-inner: 245,242,234;
+    --portal-mid: 244,240,230;
+    --portal-outer: 243,239,228;
+    --portal-edge: 242,237,226;
+
+    /* Layout */
+    --max-width: 880px;
+
+    /* Rhythm */
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 2rem;
+    --space-lg: 4rem;
+    --space-xl: 6rem;
+}
+
+/* BODY */
+body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-family: "Inter", system-ui, sans-serif;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* MANUSCRIPT */
+#manuscript {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-md);
+    position: relative;
+    z-index: 2;
+}
+
+/* PAGE */
+.page {
+    min-height: 100vh;       /* Fill at least the full viewport height */
+    width: 100vw;  
+    display: flex;
+    align-items: center;     /* Center content vertically (optional) */
+    justify-content: center; 
+    background: radial-gradient(
+        circle at center,
+        rgba(var(--portal-center),1) 0%,
+        rgba(var(--portal-center),0.995) 15%,
+        rgba(var(--portal-inner),0.99) 30%,
+        rgba(var(--portal-mid),0.985) 50%,
+        rgba(var(--portal-outer),0.98) 70%,
+        rgba(var(--portal-edge),0.975) 100%
+    );
+    animation: portalPulse 20s ease-in-out infinite alternate,
+               portalHue 60s linear infinite alternate;
+}
+
+/* Titles */
+.page-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+/* Page inner container */
+.page-inner {
+     position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+.page-inner span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(12px);
+}
+
+/* Animate letters individually */
+.letter-fade {
+    animation: letterPulse 1.8s ease-in-out forwards;
+}
+
+/* Reveal container when visible */
+.page-inner.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Subtitle */
+.page-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+}
+
+/* Body text */
+.body-text {
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: var(--text-muted);
+}
+
+/* FOOTER / RITUAL */
+.page-footer {
+    margin-top: var(--space-lg);
+}
+
+.page-divider {
+    width: 120px;
+    height: 1px;
+    margin-top: var(--space-lg);
+    background: linear-gradient(to right, transparent, var(--accent-earth), transparent);
+    opacity: 0.35;
+}
+
+/* COVER */
+.cover {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(
+        circle at center,
+        rgba(var(--portal-center),1) 0%,
+        rgba(var(--portal-center),0.995) 15%,
+        rgba(var(--portal-inner),0.99) 30%,
+        rgba(var(--portal-mid),0.985) 50%,
+        rgba(var(--portal-outer),0.98) 70%,
+        rgba(var(--portal-edge),0.975) 100%
+    );
+    animation: portalPulse 20s ease-in-out infinite alternate,
+               portalHue 60s linear infinite alternate;
+}
+
+.cover-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 10000px;
+    width: 100%;
+    pointer-events: none;
+}
+
+.cover-title {
+    font-size: 3.2rem;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-sm);
+    transform: translateY(20px);
+    opacity: 0;
+    text-shadow:
+        0 0 4px rgba(250,245,230,0.3),
+        0 0 8px rgba(250,245,230,0.2);
+    animation:
+        fadeUp 2s ease-out forwards,
+        shimmer 8s ease-in-out infinite;
+}
+
+.cover-subtitle {
+    font-size: 1rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    text-transform: lowercase;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: fadeUp 2.5s ease-out forwards;
+    animation-delay: 0.3s;
+}
+
+.cover-mark {
+    width: 60px;
+    height: 2px;
+    margin: var(--space-lg) auto 0;
+    background-color: var(--accent-earth);
+    opacity: 0.4;
+    animation: pulseMark 3s ease-in-out infinite alternate;
+}
+
+/* PARTICLES */
+.particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+    background: rgba(250,245,230,0.6);
+    border-radius: 50%;
+    top: var(--y);
+    left: var(--x);
+    opacity: 0;
+    animation: floatOrganic var(--speed, 20s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+}
+
+/* ---------------------------- */
+/* ENTER PORTAL BUTTON PAGE */
+/* ---------------------------- */
+
+.portal-entry {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: radial-gradient(
+        circle at center,
+        rgba(var(--portal-center),1) 0%,
+        rgba(var(--portal-inner),0.995) 15%,
+        rgba(var(--portal-mid),0.99) 50%,
+        rgba(var(--portal-outer),0.98) 70%,
+        rgba(var(--portal-edge),0.975) 100%
+    );
+    text-align: center;
+    flex-direction: column;
+}
+
+.portal-entry .intro-text {
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 1.5s ease forwards;
+}
+
+/* Enter Button */
+/* ---------------------------- */
+/* PORTAL ENTRY PAGE */
+/* ---------------------------- */
+/* ---------------------------- */
+/* ENTER PORTAL BUTTON STYLING */
+/* ---------------------------- */
+
+.enter-button {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    background-color: var(--accent-earth);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    pointer-events: auto;
+
+    
+}
+
+
+
+.enter-button {
+    animation: floatButton 3s ease-in-out infinite;
+}
+
+.enter-button:hover {
+    box-shadow: 0 10px 20px rgba(138,127,109,0.45), 0 0 20px rgba(138,127,109,0.2);
+}
+
+
+/* Hover effect for extra lift */
+.enter-button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(138,127,109,0.45), 0 0 20px rgba(138,127,109,0.2);
+}
+
+/* Intro text above the button */
+.portal-entry .intro-text {
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: wordFade 1.2s ease forwards;
+}
+
+/* Optional: make the text appear with a small delay */
+.portal-entry .intro-text span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: wordFade 1.2s ease forwards;
+}
+
+.button-wrapper {
+    display: inline-block;
+    animation: floatButton 3s ease-in-out infinite;
+    will-change: transform;
+}
+
+/* ENTER PORTAL BUTTON */
+#enter-portal {
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: rgba(138, 127, 109, 0.9); /* earthy tone */
+    color: #f6f3ee;
+    box-shadow: 0 6px 15px rgba(138,127,109,0.4), 0 0 20px rgba(138,127,109,0.5);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+/* Hover glow + slight lift */
+#enter-portal:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(138,127,109,0.5), 0 0 30px rgba(138,127,109,0.7);
+}
+
+
+
+#enter-portal {
+    animation: glowPulse 2.5s ease-in-out infinite alternate;
+}
+
+/* ---------------------------- */
+/* PORTAL OVERLAY ANIMATION */
+/* ---------------------------- */
+#portal-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+    transition: width 1s ease-in-out, height 1s ease-in-out, opacity 1s ease-in-out;
+    opacity: 0;
+}
+
+#portal-overlay.active {
+    width: 300vw;  /* cover entire screen */
+    height: 300vh;
+    opacity: 1;
+}
+
+body.noscroll {
+    overflow: hidden;
+}
+
+
+
+@keyframes floatButton {
+    0%   { transform: translateY(0px); }
+    50%  { transform: translateY(-6px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Optional: subtle continuous glow pulse */
+@keyframes glowPulse {
+    0% { box-shadow: 0 6px 15px rgba(138,127,109,0.4), 0 0 20px rgba(138,127,109,0.5); }
+    50% { box-shadow: 0 8px 18px rgba(138,127,109,0.45), 0 0 25px rgba(138,127,109,0.6); }
+    100% { box-shadow: 0 6px 15px rgba(138,127,109,0.4), 0 0 20px rgba(138,127,109,0.5); }
+}
+
+/* KEYFRAMES */
+@keyframes fadeUp {
+    0% { opacity:0; transform:translateY(20px); }
+    50% { opacity:0.5; }
+    100% { opacity:1; transform:translateY(0); }
+}
+
+@keyframes pulseMark {
+    0% { opacity:0.3; transform:scaleX(0.9); }
+    50% { opacity:0.45; transform:scaleX(1.05); }
+    100% { opacity:0.4; transform:scaleX(1); }
+}
+
+@keyframes portalPulse {
+    0% { filter: brightness(1); transform: scale(1); }
+    50% { filter: brightness(1.01); transform: scale(1.002); }
+    100% { filter: brightness(1); transform: scale(1); }
+}
+
+@keyframes portalHue {
+    0% {
+        --portal-center: 240,235,220;
+        --portal-inner: 245,242,234;
+        --portal-mid: 244,240,230;
+        --portal-outer: 243,239,228;
+        --portal-edge: 242,237,226;
+    }
+    50% {
+        --portal-center: 247,244,239;
+        --portal-inner: 246,243,235;
+        --portal-mid: 245,241,231;
+        --portal-outer: 244,240,229;
+        --portal-edge: 243,238,227;
+    }
+    100% {
+        --portal-center: 240,235,220;
+        --portal-inner: 245,242,234;
+        --portal-mid: 244,240,230;
+        --portal-outer: 243,239,228;
+        --portal-edge: 242,237,226;
+    }
+}
+
+@keyframes shimmer {
+    0% { text-shadow: 0 0 4px rgba(250,245,230,0.25); }
+    50% { text-shadow: 0 0 8px rgba(250,245,230,0.35); }
+    100% { text-shadow: 0 0 4px rgba(250,245,230,0.25); }
+}
+
+@keyframes floatOrganic {
+    0%   { transform: translate(0,0); opacity:0.2; }
+    50%  { transform: translate(-8px, -12px); opacity:0.6; }
+    100% { transform: translate(0,0); opacity:0.2; }
+}
+
+@keyframes breatheText {
+    0%   { transform: translateY(0) scale(1); }
+    50%  { transform: translateY(-2px) scale(1.002); }
+    100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes letterPulse {
+    0%   { opacity: 0; transform: translateY(6px) scale(0.95); color: rgba(43,43,43,0.2); }
+    30%  { opacity: 1; transform: translateY(0) scale(1); color: rgba(43,43,43,1); }
+    70%  { opacity: 1; transform: translateY(0) scale(1); color: rgba(43,43,43,1); }
+    100% { opacity: 0.8; transform: translateY(0) scale(1); color: rgba(43,43,43,0.7); }
+}
+
+@keyframes wordFade {
+    0% { opacity: 0; transform: translateY(12px); }
+    50% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0.85; transform: translateY(0); } /* slight dimming */
+}

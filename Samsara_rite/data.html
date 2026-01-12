@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<meta charset="UTF-8">
+<title>Samsara — Naming</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #0a0b0c;
+  color: #e6e6e3;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.naming-background {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center,
+    #0a0b0c 0%,
+    #1b1c1f 45%,
+    #26272b 100%);
+  animation: slowPulse 20s ease-in-out infinite alternate;
+}
+
+@keyframes slowPulse {
+  0% { filter: brightness(1); }
+  100% { filter: brightness(1.04); }
+}
+
+.naming-container {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 2.6s ease, transform 2.6s ease;
+}
+
+.naming-container.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.naming-container h1 {
+  color: rgba(245,235,200,0.9);
+  font-size: 2.6rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 1.2rem;
+}
+
+.naming-container p {
+  font-size: 1.15rem;
+  line-height: 1.9;
+  color: rgba(245,235,200,0.9);
+  margin-bottom: 2.2rem;
+}
+
+.naming-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.naming-form input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.25);
+  padding: 0.6rem 0;
+  font-size: 1.05rem;
+  color:rgba(245,235,200,0.9);
+  outline: none;
+  text-align: center;
+}
+
+.naming-form input::placeholder {
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.08em;
+}
+
+.naming-button {
+  margin-top: 3rem;
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.3);
+  color: #f5f5f5;
+  padding: 0.9rem 2.8rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+}
+
+.naming-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 22px rgba(255,255,255,0.25);
+}
+
+.gender-field {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.gender-field label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  font-size: 1.05rem;
+  color: rgba(230,230,225,0.9);
+}
+
+.gender-field input[type="radio"] {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 50%;
+  position: relative;
+}
+
+.gender-field input[type="radio"]:checked::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 50%;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="naming-background"></div>
+
+<main class="naming-container" id="naming">
+
+  <h1>Human Design</h1>
+
+  <p>
+    Last step to incorporate your Human Design, and recieve your current Archetype.<br>
+    
+    Now, leave a trace of yourself<br>
+    for continuity.
+  </p>
+
+  <form class="naming-form" id="namingForm">
+
+    
+    <div class="gender-field">
+      <label>
+        <input type="radio" name="gender" value="male" required>
+        <span>Male</span>
+      </label>
+    
+      <label>
+        <input type="radio" name="gender" value="female" required>
+        <span>Female</span>
+      </label>
+    </div>
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="date" name="birth_date" required>
+    <input type="text" name="birth_place" placeholder="Place of Birth" required>
+    <input type="email" name="email" placeholder="Email" required>
+
+    <button type="submit" class="naming-button">
+      Proceed to Revelation
+    </button>
+
+  </form>
+
+</main>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  
+    // ✅ Create Supabase client (correctly)
+    const supabaseClient = supabase.createClient(
+      "https://recqyhjooukkdwsrjslp.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3F5aGpvb3Vra2R3c3Jqc2xwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxMjkzMTAsImV4cCI6MjA4MzcwNTMxMH0.vN0bzTBBrtSBzicjniXXyCUAdn9YIWKHmXIKMJKb0rg"
+    );
+  
+    // Fade-in reveal (this was failing before)
+    const container = document.getElementById("naming");
+    setTimeout(() => container.classList.add("visible"), 400);
+  
+    // Handle form submit
+    const form = document.getElementById("namingForm");
+  
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+  
+      const formData = new FormData(form);
+  
+      const payload = {
+        name: formData.get("name"),
+        email: formData.get("email"),
+        gender: formData.get("gender"),
+        birth_date: formData.get("birth_date|"),
+        birth_place: formData.get("birth_place"),
+        archetype: localStorage.getItem("archetype") || null
+      };
+  
+      const { error } = await supabaseClient
+        .from("members")
+        .insert([payload]);
+  
+      if (error) {
+        console.error("Supabase insert error:", error);
+        alert("Something went wrong. Please try again.");
+        return;
+      }
+  
+      // Proceed to archetype reveal
+      window.location.href = "reveal.html";
+    });
+  });
+  </script>
+  
+
+</body>
+</html>

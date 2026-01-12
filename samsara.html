@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Samsara — Sacred Circle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ---------- RESET ---------- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ---------- ROOT ---------- */
+:root {
+  --bg: #f6f3ee;
+  --text-primary: #2b2b2b;
+  --text-muted: #6f6a63;
+  --accent-earth: #8a7f6d;
+
+  --portal-center: 240,235,220;
+  --portal-inner: 245,242,234;
+  --portal-mid: 244,240,230;
+  --portal-outer: 243,239,228;
+  --portal-edge: 242,237,226;
+}
+
+/* ---------- BODY ---------- */
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+/* ---------- PORTAL ---------- */
+.portal-bg {
+  min-height: 100vh;
+  width: 100vw;
+  background: radial-gradient(
+    circle at center,
+    rgba(var(--portal-center),1) 0%,
+    rgba(var(--portal-inner),0.995) 20%,
+    rgba(var(--portal-mid),0.99) 45%,
+    rgba(var(--portal-outer),0.98) 70%,
+    rgba(var(--portal-edge),0.975) 100%
+  );
+  animation: portalPulse 20s ease-in-out infinite alternate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* ---------- PARTICLES ---------- */
+.particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  width: var(--size, 3px);
+  height: var(--size, 3px);
+  background: rgba(90, 90, 90, 0.35); /* soft grey */
+  border-radius: 50%;
+  opacity: 0;
+  animation:
+    floatOrganic var(--speed, 20s) ease-in-out infinite,
+    driftSideways calc(var(--speed, 20s) * 0.6) ease-in-out infinite,
+    breatheParticle 6s ease-in-out infinite;
+}
+
+@keyframes driftSideways {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(12px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes breatheParticle {
+  0%,100% { opacity: 0.25; }
+  50%     { opacity: 0.55; }
+}
+
+
+/* ---------- WHISPER ---------- */
+.center-whisper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.center-whisper span {
+  font-size: 1.4rem;
+  letter-spacing: 0.08em;
+  color: rgba(43,43,43,0.45);
+  animation: whisperPulse 6s ease-in-out infinite;
+}
+
+/* ---------- CONTENT ---------- */
+.circle-container {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  max-width: 880px;
+  padding: 6rem 2rem;
+}
+
+.circle-title {
+  font-size: 2.2rem;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  margin-bottom: 3rem;
+}
+
+.circle-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+.circle-member {
+  padding: 1.8rem;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.member-name {
+  font-weight: 500;
+}
+
+.member-archetype {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.background-sigil {
+  position: fixed;
+  inset: 0;
+  background-image: url("assets/images/logo1.jpg"); /* adjust path */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: min(70vh, 70vw);
+  
+  opacity: 0.035; /* whisper-level */
+  filter: blur(0.3px);
+  
+  pointer-events: none;
+  z-index: 0;
+
+  animation: sigilBreath 18s ease-in-out infinite;
+  opacity: 0;
+animation: sigilFadeIn 6s ease forwards, sigilBreath 18s ease-in-out infinite;
+animation-delay: 2s;
+
+}
+
+
+@keyframes sigilFadeIn {
+  to { opacity: 0.035; }
+}
+
+
+@keyframes sigilBreath {
+  0% {
+    opacity: 0.03;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.045;
+    transform: scale(1.015);
+  }
+  100% {
+    opacity: 0.03;
+    transform: scale(1);
+  }
+}
+
+
+/* ---------- ANIMATIONS ---------- */
+@keyframes portalPulse {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.01); }
+  100% { filter: brightness(1); }
+}
+
+@keyframes floatOrganic {
+  0% { transform: translate(0,0); opacity: 0.3; }
+  50% { transform: translate(-10px,-14px); opacity: 0.6; }
+  100% { transform: translate(0,0); opacity: 0.3; }
+}
+
+@keyframes whisperPulse {
+  0%,100% { opacity: 0.35; }
+  50% { opacity: 0.65; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="portal-bg">
+  <div class="background-sigil"></div>
+
+  <div class="particles" id="particles"></div>
+
+  <div class="center-whisper">
+    <span>This is only the beginning</span>
+  </div>
+
+  <main class="circle-container">
+    <div class="circle-title">SACRED CIRCLE</div>
+
+    <section class="circle-list" id="circleList"></section>
+
+    <div class="empty-state" id="emptyState">
+      The circle is forming.
+    </div>
+  </main>
+
+</div>
+
+<script>
+/* Particles */
+const particles = document.getElementById("particles");
+for (let i = 0; i < 60; i++) {
+  const p = document.createElement("div");
+  p.className = "particle";
+  p.style.left = Math.random() * 100 + "%";
+  p.style.top = Math.random() * 100 + "%";
+  const speed = 14 + Math.random() * 18;
+p.style.setProperty("--speed", speed + "s");
+p.style.setProperty("--size", (2 + Math.random() * 2.5) + "px");
+
+  particles.appendChild(p);
+}
+
+/* Load member */
+const list = document.getElementById("circleList");
+const empty = document.getElementById("emptyState");
+
+const name = localStorage.getItem("samsara_name");
+const archetype = localStorage.getItem("samsara_archetype");
+
+if (name && archetype) {
+  empty.style.display = "none";
+  const card = document.createElement("div");
+  card.className = "circle-member";
+  card.innerHTML = `<div class="member-name">${name}</div>
+                    <div class="member-archetype">${archetype}</div>`;
+  list.appendChild(card);
+}
+
+async function loadMembers() {
+  const { data, error } = await supabase
+    .from("members")
+    .select("name, archetype")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  renderCircle(data);
+}
+
+</script>
+
+</body>
+</html>

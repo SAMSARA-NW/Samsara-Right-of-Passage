@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Samsara — Archetypes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style/archetypes.css">
+</head>
+
+<body class="archetype-page">
+
+  <!-- VOID BACKGROUND -->
+  <div class="void-background"></div>
+  <div class="void-overlay"></div>
+  <div class="void-vignette"></div>
+
+  <!-- MEDITATION -->
+  <div class="meditation-text" id="meditationText">
+    <p class="void-line">Slow your breath.</p>
+    <p class="void-line">Let your mind dissolve.</p>
+    <p class="void-line">You are not thinking.</p>
+    <p class="void-line">You are remembering.</p>
+    <p class="void-line">What moves you will be the answer.</p>
+    <p class="void-line">Maktub.</p>
+  </div>
+  
+  <div class="countdown" id="countdown"></div>
+
+<!-- VOID TRANSITION OVERLAY -->
+<div id="voidTransition" class="void-transition"></div>
+
+
+  
+  
+
+  <!-- SCRIPT -->
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const meditationContainer = document.getElementById("meditationText");
+  const meditationLines = Array.from(
+    meditationContainer.querySelectorAll(".void-line")
+  );
+
+  const countdown = document.getElementById("countdown");
+  const voidVignette = document.querySelector(".void-vignette");
+  const voidTransition = document.getElementById("voidTransition");
+
+  const LINE_DURATION = 5200;
+  const LINE_GAP = 1000;
+  const COUNT_DURATION = 2400;
+
+  /* ---------------------------
+     MEDITATION SEQUENCE
+  ---------------------------- */
+  function playMeditation() {
+    let i = 0;
+
+    function showLine() {
+      if (i > 0) {
+        meditationLines[i - 1].classList.remove("active");
+        meditationLines[i - 1].classList.add("fade");
+      }
+
+      if (i < meditationLines.length) {
+        const line = meditationLines[i];
+        line.classList.add("active");
+        i++;
+        setTimeout(showLine, LINE_DURATION + LINE_GAP);
+      } else {
+        beginVoidSink();
+      }
+    }
+
+    showLine();
+  }
+
+  /* ---------------------------
+     VOID SINK TRANSITION
+  ---------------------------- */
+  function beginVoidSink() {
+    // sink the vignette
+    voidVignette.classList.add("sink");
+
+   
+
+    // start countdown after sink animation (3s)
+    setTimeout(() => {
+      startCountdown();
+    }, 3000);
+  }
+
+  /* ---------------------------
+     COUNTDOWN 9 → 1
+  ---------------------------- */
+  function startCountdown() {
+    let number = 9;
+
+    function showNumber() {
+      if (number === 0) {
+        redirectToQuestionPage();
+        return;
+      }
+
+      const el = document.createElement("div");
+      el.className = "countdown-number void-line";
+      el.textContent = number;
+      countdown.appendChild(el);
+
+      // animate in
+      requestAnimationFrame(() => el.classList.add("active"));
+
+      setTimeout(() => {
+        el.classList.remove("active");
+        el.classList.add("fade");
+      }, COUNT_DURATION * 0.6);
+
+      setTimeout(() => {
+        el.remove();
+        number--;
+        showNumber();
+      }, COUNT_DURATION);
+    }
+
+    showNumber();
+  }
+
+  /* ---------------------------
+     REDIRECT TO QUESTION PAGE
+  ---------------------------- */
+  function redirectToQuestionPage() {
+     // overlay collapse into black
+    voidTransition.classList.add("active");
+    setTimeout(() => {
+    window.location.href = "question.html";
+  }, 3000);
+  }
+
+  /* ---------------------------
+     START
+  ---------------------------- */
+  setTimeout(playMeditation, 1200);
+
+});
+</script>
+
+    
+
+</body>
+</html>

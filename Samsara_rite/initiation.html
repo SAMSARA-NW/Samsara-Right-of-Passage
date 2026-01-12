@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Samsara — Initiation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+<style>
+/* ==========================================
+   RESET & GLOBAL STYLING
+========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: "Inter", system-ui, sans-serif;
+    background: #0a0b0c;
+    color: #e6e6e3;
+    overflow-x: hidden;
+}
+
+/* ==========================================
+   PORTAL & VEIL TRANSITIONS
+========================================== */
+#portal-overlay,
+.portal-veil {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    background: radial-gradient(circle at center,
+        rgba(255,255,255,0.05) 0%,
+        rgba(10,10,12,0.95) 100%);
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 2.4s ease, transform 2.4s ease;
+}
+.portal-veil.fade-out,
+#portal-overlay.contract {
+    opacity: 0;
+    transform: scale(1.02);
+}
+
+/* ==========================================
+   PRE-INITIATION MESSAGE (STEP 1)
+========================================== */
+.pre-initiation {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    color: rgba(230,230,225,0.85);
+    opacity: 0;
+    transition: opacity 2.6s ease;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.pre-initiation.visible {
+    opacity: 1;
+}
+
+.pre-initiation.hidden {
+    opacity: 0;
+}
+
+/* ==========================================
+   INITIATION BACKGROUND PULSE
+========================================== */
+.initiation-background,
+.page.laws {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background: radial-gradient(circle at center,
+        #0a0b0c 0%,
+        #1e1f22 40%,
+        #2a2b2f 100%);
+    animation: pulseBackground 18s ease-in-out infinite alternate;
+}
+
+@keyframes pulseBackground {
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.03); }
+    100% { filter: brightness(1); }
+}
+
+/* ==========================================
+   THRESHOLD CHAMBER
+========================================== */
+.threshold-chamber {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 998;
+}
+
+.void-background {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at center, rgba(255,255,255,0.03), transparent 60%),
+        radial-gradient(circle at 40% 70%, rgba(255,255,255,0.02), transparent 65%);
+    animation: voidPulse 16s ease-in-out infinite;
+}
+
+@keyframes voidPulse {
+    0% { opacity: 0.35; }
+    50% { opacity: 0.6; }
+    100% { opacity: 0.35; }
+}
+
+/* Threshold Text */
+.threshold-text {
+    position: relative;
+    max-width: 780px;
+    padding: 0 24px;
+    text-align: center;
+    z-index: 2;
+    font-size: 1.3rem;
+    line-height: 2.1;
+    letter-spacing: 0.02em;
+    color: rgba(230,230,225,0.9);
+}
+
+.threshold-text .body-text {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 2.5s ease, transform 2.5s ease;
+}
+
+.threshold-text .body-text.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.threshold-text .body-text.fade-out {
+    opacity: 0;
+    transform: translateY(-6px);
+}
+
+/* ==========================================
+   LAWS PAGE
+========================================== */
+.page.laws {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.laws-inner {
+    position: relative;
+    max-width: 780px;
+    text-align: center;
+    z-index: 2;
+    padding: 2rem;
+    color: #e6e6e3;
+}
+
+.laws-title {
+    font-size: 3rem;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.04em;
+    text-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.law {
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.law h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #f0f0f0;
+}
+
+.law p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: rgba(230,230,225,0.9);
+}
+
+/* Laws threshold button */
+.laws-threshold {
+    margin-top: 3rem;
+}
+
+.threshold-button {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 0.9rem 2.4rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.12em;
+    color: #f0f0f0;
+    cursor: pointer;
+    border-radius: 999px;
+    transition: all 0.4s ease;
+}
+
+.threshold-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 18px rgba(255,255,255,0.2);
+}
+
+/* ==========================================
+   PARTICLES
+========================================== */
+.particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    top: var(--y);
+    left: var(--x);
+    animation: floatOrganic var(--speed) ease-in-out infinite;
+    opacity: 0.3;
+}
+
+@keyframes floatOrganic {
+    0% { transform: translate(0,0); }
+    50% { transform: translate(-8px, -14px); }
+    100% { transform: translate(0,0); }
+}
+
+/* ==========================================
+   ANIMATIONS
+========================================== */
+@keyframes lawFadeIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes wordFade {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 0.85; transform: translateY(0); }
+}
+
+/* ==========================================
+   INITIATION PAGE
+========================================== */
+.initiation-page .initiation-container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 2.4s ease, transform 2.4s ease;
+}
+
+.initiation-page h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #f5f5f5;
+    text-shadow: 0 0 12px rgba(0,0,0,0.25);
+}
+
+.initiation-page h2 {
+    font-size: 1.7rem;
+    margin: 1.8rem 0 1rem;
+    color: #eaeaea;
+}
+
+.initiation-page h4 {
+    font-size: 1.7rem;
+    margin: 1.8rem 0 1rem;
+    color: #c3e5b4;
+}
+
+.initiation-txt{
+
+    color: #c3e5b4;
+}
+
+
+.initiation-page p,
+.initiation-page li,
+.initiation-page blockquote {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: rgba(230,230,225,0.95);
+}
+
+
+.initiation-page ul {
+    margin: 1rem 0 2rem 2rem;
+    text-align: left;
+}
+
+.initiation-page blockquote {
+    margin: 1rem 0 2rem;
+    font-style: italic;
+    color: rgba(220,220,215,0.95);
+}
+
+/* Final emphasis */
+.initiation-page .closing {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    line-height: 1.9;
+    font-weight: 600;
+    color: #f0f0f0;
+}
+
+/* ==========================================
+   ARCHETYPE BUTTON
+========================================== */
+.initiation-end {
+    margin: 4rem 0 2rem;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.archetype-button {
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    border: 2px solid rgba(255,255,255,0.25);
+    color: #f5f5f5;
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 1rem 2.8rem;
+    border-radius: 999px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.5s ease;
+    box-shadow: 0 0 12px rgba(255,255,255,0.1);
+}
+
+.archetype-button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 0 28px rgba(255,255,255,0.25);
+    background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+}
+
+
+    .center-list {
+    width: fit-content; /* or a fixed width */
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 0;
+  }
+
+
+
+
+</style>
+
+</head>
+<body class="initiation-page">
+
+    <!-- STEP 1: PRE-INITIATION MESSAGE -->
+<div class="pre-initiation" id="preInitiation">
+    <p>(Move slowly. Read deliberately. Cross this threshold with intention.)</p>
+  </div>
+
+    <!-- SUBTLE BACKGROUND PULSE -->
+       <!-- CONTINUOUS VEIL FROM LAWS -->
+  <div class="portal-veil open" id="portal-veil"></div>
+
+  <!-- SUBTLE BACKGROUND PULSE -->
+  <div class="initiation-background"></div>
+ 
+  
+
+    <main class="initiation-container">
+
+        <header class="initiation-header">
+            <h1>SAMSARA</h1>
+            <p class="initiation-subtitle">Rite of Passage Text</p>
+        </header>
+
+        <section class="initiation-section">
+            <h2>The Threshold</h2>
+            <hr>
+            
+            <br>
+            <blockquote> 
+                “When everyone is allowed in without initiation, values decay.”
+                ~ Nietzsche
+            </blockquote>
+            <br>
+            <p>You are not here by accident.</p>
+
+            <p>
+                You have felt something fray in the modern world, a thinning of meaning,
+                noise without nourishment, speed without direction.
+                Samsara is not an escape from that world.
+                It is a <strong>return to rhythm within it</strong>.
+                
+            </p>
+            <br>
+            <p>This land is not a backdrop.<br>
+            It is the first teacher...</p>
+            <br>
+            <p><strong>This land is not a backdrop.<br>
+                It is the first teacher.</strong></p>
+                <br>
+            <p>
+                Before you arrive with ideas, ambitions, or offerings,
+                you are asked to arrive empty-handed.
+            </p>
+            <p>
+                 <strong>sink in... listen... understand the rhythm.</strong>.
+            </p>
+            <br>
+            <br>
+
+        </section>
+
+        <section class="initiation-section">
+            <h2>The First Understanding</h2>
+
+            <p><strong>Samsara is a monastery of natural rhythm and flow.</strong></p>
+
+                <ul>
+                    <ul class="center-list">
+                        <li>Discipline before freedom</li>
+                        <li>Responsibility before expression</li>
+                        <li>Attention before opinion</li>
+                    </ul>
+                    
+                </ul>
+
+            <p>
+                Here, work is prayer without words.
+            </p>
+
+            <p><em>What you build will build you in return.</em></p>
+        </section>
+        <br>
+        <br>
+
+        <section class="initiation-section">
+            <h2>The Three Laws <span>(to be held, not debated)</span></h2>
+            <br>
+
+            <div class="law-block">
+                <h3>1. Regeneration First</h3>
+                <p>
+                    Nothing you do here may leave the land,
+                    the people, or yourself poorer than you found them.
+                </p>
+            </div>
+            <br>
+
+            <div class="law-block">
+                <h3>2. Embodied Participation</h3>
+                <p>
+                    Ideas must touch soil, tools, systems, or people.
+                    Thought alone is unfinished.
+                </p>
+            </div>
+            <br>
+
+            <div class="law-block">
+                <h3>3. Responsibility Over Rights</h3>
+                <p>
+                    Access is earned through care.
+                    Nothing here is owed.
+                </p>
+            </div>
+            <br>
+<br>
+            <p class="quiet-warning">
+                <h3>If these laws feel heavy, this is not your place.<br>
+                    If they feel relieving, you are already beginning.</h3>
+            </p>
+        </section>
+        <br>
+        <br>
+
+        <section class="initiation-section"  >
+            <h4>The Rhythm of Arrival <span>(first 48 hours)</span></h4>
+
+            <p style="color: #c3e5b4;">Your first days are not for proving yourself.<br>
+            They are for listening.</p>
+
+            <ul class="center-list">
+                <li style="color: #c3e5b4;">Walk the land in silence</li>
+                <li style="color: #c3e5b4;">Learn its water, its wounds, its edges</li>
+                <li style="color: #c3e5b4;">Work alongside others without instruction beyond the task</li>
+                <li style="color: #c3e5b4;">Observe the daily rhythm without attempting to change it</li>
+            </ul>
+
+            <p><em>Questions will come later.<br>
+            Presence comes first.</em></p>
+            <br>
+        <blockquote> 
+             "Freedom is not doing what you want, but wanting what aligns with nature." 
+             ~ Epictetus
+        </blockquote>
+        </section>
+        <br>
+        <br>
+
+        <section class="initiation-section">
+            <h2>Contribution</h2>
+
+            <p>You are not asked what you do in the outside world.</p>
+
+            <blockquote>
+                What can you offer the land and the community by embodying your most authentic self?
+            </blockquote>
+
+            <p>
+                Contribution may be humble or complex.<br>
+                Both are valued.
+            </p>
+            <br>
+            <p>
+                All that's asked is that...
+            </p>
+
+            <ul class="center-list">
+                <li>You finish what you start</li>
+                <li>You care for what you touch</li>
+                <li>You leave systems clearer than you found them</li>
+            </ul>
+<br>
+        <blockquote> 
+            “Don’t explain your philosophy. Embody it.”
+            ~ Epictetus
+        </blockquote>
+
+        </section>
+        <br>
+        <br>
+
+        <section class="initiation-section">
+            <h2>Technology & Tools</h2>
+
+            <p>
+                Technology exists here as a servant, not a master.
+            </p>
+
+            <p>
+                You may be asked to log your work, reflections, and learnings —
+                not for surveillance, but for <strong>memory</strong>.
+            </p>
+
+            <p><em>Samsara forgets nothing that matters.</em></p>
+        </section>
+<br>
+        <br>
+
+        <section class="initiation-section">
+            <h2>Exit Is As Sacred As Entry</h2>
+
+            <p>When you leave, you will:</p>
+
+            <ul class="center-list">
+                <li>Close what you opened</li>
+                <li>Pass on what you learned</li>
+                <li>Name what this land has changed in you</li>
+            </ul>
+
+            <p>
+                There is no disappearing.<br>
+                Only completion.
+            </p>
+        </section>
+<br>
+        <br>
+        
+        <section class="initiation-section final">
+            <h2>The Quiet Agreement</h2>
+
+            <ul class="center-list">
+                <li>To act in good faith</li>
+                <li>To place the whole before the self</li>
+                <li>To let the land correct you</li>
+                <li>To work without needing applause</li>
+                <li><strong>To give without needing applause</strong></li>
+            </ul>
+            <br>
+            <blockquote>
+                Samsara is not a place you enter.<br>
+                It is a pattern you remember.
+            </blockquote>
+            <br>
+            <p class="closing">
+
+                <strong>Arrive humbly.</strong><br>
+                <strong>land slowly.</strong><br>
+                <strong>Begin simply.</strong>
+            </p>
+        </section>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+            
+              const veil = document.getElementById("portal-veil");
+              const container = document.querySelector(".initiation-container");
+              const pre = document.getElementById("preInitiation")
+            
+              
+              if (!veil || !container || !pre) return;
+            
+              // Start with content slightly hidden
+              container.style.opacity = 0;
+              container.style.transform = "translateY(6px)";
+              container.style.transition = "opacity 2.4s ease, transform 2.4s ease";
+            
+               // STEP 1: show pre-initiation message
+  setTimeout(() => {
+    pre.classList.add("visible");
+  }, 300);
+
+   // fade message out
+   setTimeout(() => {
+    pre.classList.remove("visible");
+    pre.classList.add("hidden");
+  }, 3800);
+
+              // Fade veil out and reveal content
+              setTimeout(() => {
+                pre.style.display = "none";
+                veil.classList.add("fade-out");
+                container.style.opacity = 1;
+                container.style.transform = "translateY(0)";
+              }, 6200); // small delay to ensure smoothness
+            });
+            </script>
+            
+            <section class="initiation-end">
+                <button id="discover-archetypes" class="archetype-button">
+                    Discover your Archetypes
+                </button>
+            </section>
+            <script>
+                document.getElementById("discover-archetypes").addEventListener("click", () => {
+                    // Redirect to archetypes page
+                    window.location.href = "archetypes.html";
+                });
+                </script>
+    </main>
+ 
+</body>
+</html>
