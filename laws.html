@@ -428,6 +428,7 @@ body.portal-exit::after {
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
+
     /* Fade laws in sequence */
     document.querySelectorAll('.law').forEach((law, i) => {
         setTimeout(() => {
@@ -503,7 +504,8 @@ document.addEventListener("DOMContentLoaded", () => {
          TIMING — ceremonial pacing
          =============================== */
     
-      const DISPLAY_DURATION = 6200;   // sentence fully visible
+      const INITIAL_DELAY   = 2400;   // pause before first sentence appears
+      const DISPLAY_DURATION = 4200;   // sentence fully visible
       const FADE_DURATION    = 2200;   // fade in/out (CSS must match)
       const PAUSE_DURATION   = 2800;   // silence between sentences
       const FINAL_PAUSE      = 2200;   // breath before laws awaken
@@ -569,7 +571,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     
       // Begin ritual
-      showLine(index);
+     // Begin ritual — after a deliberate pause
+setTimeout(() => {
+  showLine(index);
+}, INITIAL_DELAY);
+
     
     });
     </script>

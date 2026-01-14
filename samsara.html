@@ -161,6 +161,125 @@ animation-delay: 2s;
 
 }
 
+/* ---------- RITE FIELD ---------- */
+.rite-field {
+  position: fixed;
+  inset: 0;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+
+/* ---------- RITE BUBBLE ---------- */
+.rite-bubble {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  color: rgba(43,43,43,0.75);
+
+  background:
+    radial-gradient(
+      circle at 30% 30%,
+      rgba(255,255,255,0.95),
+      rgba(255,255,255,0.6) 60%,
+      rgba(230,225,215,0.45) 100%
+    );
+
+  backdrop-filter: blur(6px);
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,0.08),
+    inset 0 0 18px rgba(255,255,255,0.6);
+
+  opacity: 0;
+  animation:
+    bubbleFadeIn 4s ease forwards,
+    bubbleDrift var(--drift-time, 26s) ease-in-out infinite,
+    bubbleBreath 8s ease-in-out infinite;
+}
+
+/* ---------- BUBBLE CONTENT ---------- */
+.rite-bubble span {
+  position: absolute;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.bubble-name {
+  opacity: 1;
+}
+
+.bubble-archetype {
+  opacity: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  color: rgba(43,43,43,0.6);
+}
+
+/* ---------- HOVER STATE ---------- */
+.rite-bubble:hover .bubble-inner {
+  transform: scale(1.08);
+}
+
+.rite-bubble:hover .bubble-name {
+  opacity: 0;
+}
+
+.rite-bubble:hover .bubble-archetype {
+  opacity: 1;
+}
+
+
+/* ---------- INNER WRAPPER ---------- */
+.bubble-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  transition: transform 0.6s ease;
+}
+
+
+/* ---------- ANIMATIONS ---------- */
+@keyframes bubbleFadeIn {
+  to { opacity: 0.85; }
+}
+
+@keyframes bubbleBreath {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+
+@keyframes bubbleDrift {
+  0% {
+    transform: translate(0,0);
+  }
+  50% {
+    transform: translate(var(--dx, 20px), var(--dy, -24px));
+  }
+  100% {
+    transform: translate(0,0);
+  }
+}
+
+
 
 @keyframes sigilFadeIn {
   to { opacity: 0.035; }
@@ -201,11 +320,17 @@ animation-delay: 2s;
   50% { opacity: 0.65; }
 }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 </head>
 
 <body>
 
 <div class="portal-bg">
+  <!-- ---------- RITE FIELD ---------- -->
+<div class="rite-field" id="riteField"></div>
+
   <div class="background-sigil"></div>
 
   <div class="particles" id="particles"></div>
@@ -227,6 +352,16 @@ animation-delay: 2s;
 </div>
 
 <script>
+
+  /* ---------- SUPABASE INIT ---------- */
+const supabaseUrl = "https://recqyhjooukkdwsrjslp.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3F5aGpvb3Vra2R3c3Jqc2xwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxMjkzMTAsImV4cCI6MjA4MzcwNTMxMH0.vN0bzTBBrtSBzicjniXXyCUAdn9YIWKHmXIKMJKb0rg";
+
+const supabaseClient  = supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+);
+
 /* Particles */
 const particles = document.getElementById("particles");
 for (let i = 0; i < 60; i++) {
@@ -257,8 +392,13 @@ if (name && archetype) {
   list.appendChild(card);
 }
 
+const riteField = document.getElementById("riteField");
+
+
+
+
 async function loadMembers() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from("members")
     .select("name, archetype")
     .order("created_at", { ascending: false });
@@ -270,6 +410,89 @@ async function loadMembers() {
 
   renderCircle(data);
 }
+
+/* ---------- RITE BUBBLES ---------- */
+
+/* ---------- LOAD RITE MEMBERS ---------- */
+async function loadRiteMembers() {
+  const { data, error } = await supabaseClient
+    .from("members")
+    .select("name, archetype")
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("Supabase error:", error);
+    return;
+  }
+
+  if (!data || data.length === 0) return;
+
+  data.forEach((member, i) => {
+    setTimeout(() => {
+      spawnBubble(member.name, member.archetype);
+    }, i * 1400);
+  });
+}
+
+
+
+function spawnBubble(name, archetype) {
+  const bubble = document.createElement("div");
+  bubble.className = "rite-bubble";
+
+  bubble.innerHTML = `
+  <div class="bubble-inner">
+    <span class="bubble-name">${name}</span>
+    <span class="bubble-archetype">${archetype}</span>
+  </div>
+`;
+
+  const size = 110;
+
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  const forbiddenRadius = Math.min(window.innerWidth, window.innerHeight) * 0.22;
+
+  let x = 0;
+  let y = 0;
+  let valid = false;
+
+  for (let i = 0; i < 100; i++) {
+    const tryX = Math.random() * (window.innerWidth - size);
+    const tryY = Math.random() * (window.innerHeight - size);
+
+    const dx = tryX + size / 2 - centerX;
+    const dy = tryY + size / 2 - centerY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > forbiddenRadius) {
+      x = tryX;
+      y = tryY;
+      valid = true;
+      break;
+    }
+  }
+
+  if (!valid) {
+    const angle = Math.random() * Math.PI * 2;
+    const radius = forbiddenRadius + 60;
+    x = centerX + Math.cos(angle) * radius - size / 2;
+    y = centerY + Math.sin(angle) * radius - size / 2;
+  }
+
+  bubble.style.left = `${x}px`;
+  bubble.style.top = `${y}px`;
+
+  bubble.style.setProperty("--dx", `${-20 + Math.random() * 40}px`);
+  bubble.style.setProperty("--dy", `${-20 + Math.random() * 40}px`);
+  bubble.style.setProperty("--drift-time", `${22 + Math.random() * 20}s`);
+
+  riteField.appendChild(bubble);
+}
+
+
+loadRiteMembers();
+
 
 </script>
 

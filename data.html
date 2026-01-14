@@ -186,51 +186,53 @@ html, body {
 </main>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-  
-    // ✅ Create Supabase client (correctly)
-    const supabaseClient = supabase.createClient(
-      "https://recqyhjooukkdwsrjslp.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3F5aGpvb3Vra2R3c3Jqc2xwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxMjkzMTAsImV4cCI6MjA4MzcwNTMxMH0.vN0bzTBBrtSBzicjniXXyCUAdn9YIWKHmXIKMJKb0rg"
-    );
-  
-    // Fade-in reveal (this was failing before)
-    const container = document.getElementById("naming");
-    setTimeout(() => container.classList.add("visible"), 400);
-  
-    // Handle form submit
-    const form = document.getElementById("namingForm");
-  
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-  
-      const formData = new FormData(form);
-  
-      const payload = {
-        name: formData.get("name"),
-        email: formData.get("email"),
-        gender: formData.get("gender"),
-        birth_date: formData.get("birth_date|"),
-        birth_place: formData.get("birth_place"),
-        archetype: localStorage.getItem("archetype") || null
-      };
-  
-      const { error } = await supabaseClient
-        .from("members")
-        .insert([payload]);
-  
-      if (error) {
-        console.error("Supabase insert error:", error);
-        alert("Something went wrong. Please try again.");
-        return;
-      }
-  
-      // Proceed to archetype reveal
-      window.location.href = "reveal.html";
-    });
+document.addEventListener("DOMContentLoaded", () => {
+
+  const supabaseClient = supabase.createClient(
+    "https://recqyhjooukkdwsrjslp.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3F5aGpvb3Vra2R3c3Jqc2xwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxMjkzMTAsImV4cCI6MjA4MzcwNTMxMH0.vN0bzTBBrtSBzicjniXXyCUAdn9YIWKHmXIKMJKb0rg"
+  );
+
+  // Reveal container
+  const container = document.getElementById("naming");
+  setTimeout(() => container.classList.add("visible"), 400);
+
+  const form = document.getElementById("namingForm");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    const gender = formData.get("gender");
+
+    // store gender for reveal image logic
+    localStorage.setItem("gender", gender);
+
+    const payload = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      gender: gender,
+      birth_date: formData.get("birth_date"),   // ✅ FIXED
+      birth_place: formData.get("birth_place"),
+      archetype: localStorage.getItem("samsara_archetype") // ✅ FIXED
+    };
+
+    const { error } = await supabaseClient
+      .from("members") // ✅ FIXED
+      .insert([payload]);
+
+    if (error) {
+      console.error("Supabase insert error:", error);
+      alert(error.message); // show real error
+      return;
+    }
+
+    window.location.href = "reveal.html";
   });
-  </script>
-  
+});
+</script>
+
 
 </body>
 </html>
