@@ -6,6 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/style.css">
 </head>
+
+<audio id="samsara-audio" preload="auto">
+  <source src="assets/audio/samsara-ambient.mp3" type="audio/mpeg">
+</audio>
+
+<script src="render/audio.js"></script>
+
+<script>
+function enterFullscreen() {
+  const el = document.documentElement;
+
+  if (el.requestFullscreen) el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if (el.msRequestFullscreen) el.msRequestFullscreen();
+}
+</script>
+
 <body>
 
     <!-- PORTAL OVERLAY -->
@@ -73,12 +90,32 @@
 
 <script src="render/particles.js"></script>
 
+
+
 <script>
     document.addEventListener("DOMContentLoaded", () => {
     
         /* =========================
            COVER PARALLAX
         ========================== */
+
+        function requestFullscreenOnce() {
+  const el = document.documentElement;
+
+  if (el.requestFullscreen) el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+}
+
+        document.addEventListener("click", () => {
+  const audio = document.getElementById("samsara-audio");
+  if (!audio) return;
+
+  audio.play().catch(() => {});
+
+  enterFullscreen();
+
+}, { once: true });
+
         const coverInner = document.querySelector('.cover-inner');
         const cover = document.querySelector('.cover');
     
