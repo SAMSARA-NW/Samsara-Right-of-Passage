@@ -255,7 +255,20 @@
     };
 
     // --- CALCULATE RESULT ---
-   
+   const stored = localStorage.getItem("samsara_result");
+
+if (!stored) {
+  document.getElementById("reveal").innerHTML = `
+    <p style="color: rgba(245,235,200,0.6)">
+      Your rite was interrupted.<br>
+      Please begin again.
+    </p>
+  `;
+  throw new Error("No stored archetype result");
+}
+
+const result = JSON.parse(stored);
+
     const data = ARCHETYPE_TEXT[result.archetype];
 
     // --- GET GENDER ---

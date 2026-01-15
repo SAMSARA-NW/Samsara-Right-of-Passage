@@ -5,6 +5,8 @@
   <title>Samsara — Questions</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style/question.css" />
+  <script src="render/logic.js"></script>
+
 </head>
 <body>
 
@@ -312,6 +314,8 @@
     const canvas = document.getElementById("floatingSpecs");
     const ctx = canvas.getContext("2d");
 
+   
+
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
@@ -361,6 +365,7 @@
   showQuestion(currentIndex);
 }, 5400);
 
+
 function showQuestion(index) {
   questions.forEach(q => q.classList.remove("question-active"));
 
@@ -397,16 +402,39 @@ function showQuestion(index) {
           if (currentIndex < questions.length) {
   showQuestion(currentIndex);
 } else {
-  console.log("All questions answered → redirecting to reveal.html");
-  window.location.href = "data.html";
-}
+
+ const result = calculateArchetype();
+
+          // Store full result for reveal page
+          localStorage.setItem(
+            "samsara_result",
+            JSON.stringify(result)
+          );
+
+          // Store archetype explicitly for Supabase payload
+          localStorage.setItem(
+            "samsara_archetype",
+            result.archetype
+          );
+
+          console.log("Samsara Archetype Locked:", result);
+
+          // Proceed to data collection
+          window.location.href = "data.html";
+        }
+
+ 
 
         }, 700); // match CSS fade
       });
     });
 
   });
+
+
   </script>
+
+
 
 
 
