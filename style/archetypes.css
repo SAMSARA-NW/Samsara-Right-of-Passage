@@ -148,14 +148,16 @@ html, body {
   }
   
   /* ===== MEDITATION CHAMBER ===== */
-  .meditation-chamber {
-    position: relative;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-  }
+ .meditation-chamber {
+  position: relative;
+  min-height: 100svh; /* ✅ mobile-safe viewport */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.5rem;
+  z-index: 2;
+}
+
   
   .meditation-layer {
     position: fixed;
@@ -179,6 +181,20 @@ html, body {
   filter: blur(3px);
   transition: opacity 1.8s ease, transform 1.8s ease, filter 1.8s ease;
 }
+
+.meditation-text {
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 
 /* When JS adds .active, line appears */
 .meditation-text .void-line.active,
