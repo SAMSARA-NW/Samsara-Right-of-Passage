@@ -160,7 +160,7 @@ html, body {
 
   
   .meditation-layer {
-    position: fixed;
+    position: relative;  
     inset: 0;
     z-index: 2;
     display: flex;
@@ -183,16 +183,20 @@ html, body {
 }
 
 .meditation-text {
+
+  
   position: relative;
   width: 100%;
   max-width: 680px;
   margin: 0 auto;
   text-align: center;
-
+ transform: translateY(-4vh);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom)
 }
 
 

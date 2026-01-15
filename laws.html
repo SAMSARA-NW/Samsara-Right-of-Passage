@@ -104,9 +104,13 @@ html, body {
     width: 100%;
     height: 100%;
     font-family: "Inter", system-ui, sans-serif;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     background: #f4f3ef;
 }
+
+
 
 /* ---------------------------- */
 /* PORTAL OVERLAY */
@@ -135,8 +139,9 @@ html, body {
 /* PAGE */
 /* ---------------------------- */
 .page.laws {
+    min-height: 100vh;
+    height: auto;
     width: 100vw;
-    height: 100vh;
     position: relative;
     display: flex;
     align-items: center;
@@ -149,6 +154,20 @@ html, body {
     );
     animation: portalPulse 18s ease-in-out infinite alternate;
 }
+
+.threshold-chamber,
+.void-background,
+.void,
+.particles {
+    pointer-events: none;
+}
+
+.laws-inner,
+.threshold-button {
+    pointer-events: auto;
+}
+
+    
 
 /* ---------------------------- */
 /* CONTENT */
@@ -204,7 +223,7 @@ html, body {
 .threshold-button {
     background: transparent;
     border: 1px solid rgba(60,60,60,0.4);
-    padding: 0.9rem 2.2rem;
+    padding: 0.9rem 1.2rem;
     font-size: 0.95rem;
     letter-spacing: 0.12em;
     color: #2c2c2c;
@@ -422,7 +441,6 @@ body.portal-exit::after {
 
         <div class="laws-threshold">
             
-            <br>
 
             <button id="accept-laws" class="threshold-button">
                 I am willing to proceed
