@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <audio id="samsara-audio" preload="auto">
-  <source src="assets/audio/samsara-ambient.mp3" type="audio/mpeg">
-</audio>
+    <source src="assets/audio/samsara-ambient.mp3" type="audio/mpeg">
+  </audio>
 
-<script src="render/audio.js"></script>
+  <script src="render/audio.js"></script>
 
   <style>
     :root {
@@ -57,10 +57,7 @@
     }
 
     @keyframes fadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     h1 {
@@ -90,79 +87,65 @@
     }
 
     @keyframes imageFade {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .essence {
-      font-size: 1.1rem;
-      line-height: 1.8;
+    .role {
+      font-style: italic;
+      margin-bottom: 2em;
       color: var(--accent);
-      margin-bottom: 3em;
     }
 
-    .coherence {
-      margin-bottom: 3em;
-      font-size: 0.9rem;
+    .attributes ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .attributes li {
+      margin: 0.4em 0;
       color: var(--muted);
     }
 
-    .axes {
+    .scores {
+      margin-top: 3em;
       text-align: left;
-      margin: 0 auto 4em;
-      max-width: 520px;
     }
 
-    .axis {
+    .score-row {
       display: flex;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(245,235,200,0.15);
-      padding: 0.6em 0;
       font-size: 0.85rem;
-    }
-
-    .axis span {
-      color: var(--muted);
+      padding: 0.4em 0;
+      border-bottom: 1px solid rgba(245,235,200,0.12);
     }
 
     .closing {
-      font-size: 0.95rem;
-      line-height: 1.7;
-      color: var(--muted);
       margin-top: 4em;
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.7;
     }
 
-    /* ---------- WELCOME GATE ---------- */
-.welcome-gate {
-  position: fixed;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 4;
-
+    /* ---------- INNER CIRCLE GATE ---------- */
+.inner-circle-gate {
+  margin-top: 4.5rem;
   display: flex;
   justify-content: center;
-  align-items: center;
-
-  animation: gateFadeIn 3s ease forwards;
   opacity: 0;
-  animation-delay: 2s;
+  animation: gateFadeIn 3s ease forwards;
+  animation-delay: 2.5s;
 }
 
-/* ---------- WELCOME BUTTON ---------- */
-.welcome-button {
-  padding: 0.9rem 2.4rem;
+.inner-circle-button {
+  padding: 0.9rem 2.6rem;
   border-radius: 999px;
 
-  font-family: Inter, system-ui, sans-serif;
   font-size: 0.85rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+  text-decoration: none;
 
   color: rgba(43,43,43,0.85);
-  text-decoration: none;
 
   background:
     radial-gradient(
@@ -184,15 +167,13 @@
     opacity 0.6s ease;
 }
 
-/* ---------- HOVER ---------- */
-.welcome-button:hover {
+.inner-circle-button:hover {
   transform: scale(1.06);
   box-shadow:
     0 14px 36px rgba(0,0,0,0.12),
     inset 0 0 22px rgba(255,255,255,0.75);
 }
 
-/* ---------- FADE IN ---------- */
 @keyframes gateFadeIn {
   to { opacity: 1; }
 }
@@ -201,134 +182,144 @@
 </head>
 
 <body>
+<div class="void"></div>
 
-  <div class="void"></div>
+<main>
+  <section class="reveal" id="reveal"></section>
+</main>
 
-  <main>
-    <section class="reveal" id="reveal"></section>
-  </main>
+<script src="render/logic.js"></script>
 
-  <!-- ARCHETYPE LOGIC -->
-  <script src="render/logic.js"></script>
+<script>
+/* ================= IMAGE REGISTRY ================= */
+const ARCHETYPE_IMAGES = {
+  Steward: { male: "assets/images/steward.png", female: "assets/images/steward.png" },
+  Lover: { male: "assets/images/lover.png", female: "assets/images/lover.png" },
+  Jester: { male: "assets/images/jester.png", female: "assets/images/jester.png" },
+  Seeker: { male: "assets/images/seeker.png", female: "assets/images/seeker.png" },
+  Alchemist: { male: "assets/images/alchemist.png", female: "assets/images/alchemist.png" },
+  Sage: { male: "assets/images/sage.png", female: "assets/images/sage.png" },
+  StoryWeaver: { male: "assets/images/storyweaver.png", female: "assets/images/storyweaver.png" },
+  Tradesman: { male: "assets/images/tradesman.png", female: "assets/images/tradesman.png" },
+  Catalyst: { male: "assets/images/catalyst.png", female: "assets/images/catalyst.png" },
+  Drifter: { male: "assets/images/drifter.png", female: "assets/images/drifter.png" }
+};
 
-  <script>
-    const ARCHETYPE_TEXT = {
-      StoryWeaver: {
-        title: "The Story Weaver",
-        essence:
-          "You move through life by listening first. Meaning reveals itself to you slowly — through symbols, patterns, and quiet observation. You do not rush coherence; you allow it to arrive. Your presence invites others to see their lives as part of a larger narrative."
-      },
-      Catalyst: {
-        title: "The Catalyst",
-        essence:
-          "You bring momentum where stagnation lingers. Action clarifies truth for you. You are most alive in motion, initiating shifts others hesitate to begin. Your gift is ignition — even when it costs comfort or certainty."
-      },
-      Harmonizer: {
-        title: "The Harmonizer",
-        essence:
-          "You sense the emotional temperature of a space instinctively. You move to restore balance, often before conflict becomes visible. Your strength lies in connection, attunement, and the invisible labor of cohesion."
-      },
-      Steward: {
-        title: "The Steward",
-        essence:
-          "You carry responsibility with quiet dignity. You protect what is fragile, maintain what endures, and think in long arcs of time. Your power is reliability — often unseen, always essential."
-      },
-      Analyst: {
-        title: "The Analyst",
-        essence:
-          "You seek clarity beneath complexity. Systems, structures, and root causes draw your attention naturally. You create stability by understanding — even when others mistake your distance for detachment."
-      },
-      Alchemist: {
-        title: "The Alchemist",
-        essence:
-          "You are drawn to transformation. You sense when something must dissolve in order for something truer to emerge. You move comfortably through uncertainty, reshaping identity, meaning, and form."
-      },
-      Shapeshifter: {
-        title: "The Shapeshifter",
-        essence:
-          "You do not anchor yourself to a single form. You adapt, translate, and move between roles with fluid intelligence. Your strength lies in emergence — responding to what the moment asks rather than what history defines."
-      }
-    };
+/* ================= LOAD STORED DATA ================= */
+const archetypeRaw = localStorage.getItem("samsara_archetype");
+const gender = localStorage.getItem("gender") === "female" ? "female" : "male";
+const weights = JSON.parse(localStorage.getItem("samsara_weights") || "{}");
 
-    const AXIS_LABELS = {
-      E: "Expression",
-      D: "Decision",
-      M: "Meaning",
-      T: "Time",
-      R: "Relational",
-      S: "Stability",
-      I: "Identity"
-    };
+const container = document.getElementById("reveal");
 
-    // --- CALCULATE RESULT ---
-   const stored = localStorage.getItem("samsara_result");
+/* ================= ARCHETYPE DATA ================= */
+const ARCHETYPE_META = {
+  Steward: {
+    role: "The one who holds the walls steady — not the one who is seen, but the one everything depends on.",
+    traits: ["Grounded", "Dependable", "Systemic", "Loyal", "Calm"]
+  },
+  Lover: {
+    role: "The one who feels first — attuning to beauty, harmony, and emotional truth.",
+    traits: ["Empathetic", "Heart-led", "Sensory", "Creative", "Devoted"]
+  },
+  Jester: {
+    role: "The one who punctures illusion — laughing where others cling to seriousness.",
+    traits: ["Playful", "Disruptive", "Ethical challenger", "Flux-driven", "Reflective"]
+  },
+  Seeker: {
+    role: "The one who cannot stop asking — walking to understand, not arrive.",
+    traits: ["Curious", "Restless", "Independent", "Analytical", "Questioning"]
+  },
+  Alchemist: {
+    role: "The one who transforms quietly — shifting the unseen so reality changes.",
+    traits: ["Transformative", "Innovative", "Intentional", "Bridges spirit & matter", "Subtle"]
+  },
+  Sage: {
+    role: "The one who sees clearly — speaking truth without embellishment.",
+    traits: ["Insightful", "Calm", "Truth-bound", "Energetically perceptive", "Direct"]
+  },
+  StoryWeaver: {
+    role: "The one who sits slightly to the side of the fire, listening — then retelling the night so others know what it meant.",
+    traits: ["Narrative", "Symbolic", "Dreamer", "Translator", "Pattern-seer"]
+  },
+  Tradesman: {
+    role: "The one who builds with their hands — turning intention into form.",
+    traits: ["Practical", "Skilled", "Reliable", "Grounded", "Integrity-driven"]
+  },
+  Catalyst: {
+    role: "The spark that lights the fire — not the flame that sustains it.",
+    traits: ["Initiator", "Fast-moving", "Inspirational", "Decisive", "Intense"]
+  }
+};
 
-if (!stored) {
-  document.getElementById("reveal").innerHTML = `
-    <p style="color: rgba(245,235,200,0.6)">
-      Your rite was interrupted.<br>
-      Please begin again.
-    </p>
+/* ================= RENDER ================= */
+if (archetypeRaw === "Drifter") {
+
+  /* -------- DRIFTER (NO NARRATIVE) -------- */
+  container.innerHTML = `
+    <div class="subtitle">Pattern Detected</div>
+    <h1>Drifter</h1>
+    <img class="archetype-image" src="assets/images/drifter.png" alt="Drifter">
   `;
-  throw new Error("No stored archetype result");
+
+} else {
+
+  /* -------- NORMAL / DUAL REVEAL -------- */
+  const parts = archetypeRaw.split("–");
+  const primary = parts[0];
+  const secondary = parts[1] || null;
+
+  const imageSrc =
+    ARCHETYPE_IMAGES[primary] &&
+    ARCHETYPE_IMAGES[primary][gender];
+
+  container.innerHTML = `
+    <div class="subtitle">Your Archetype</div>
+    <h1>${archetypeRaw.replace("–", " & ")}</h1>
+
+    ${imageSrc ? `<img class="archetype-image" src="${imageSrc}" alt="${primary}">` : ""}
+
+    <div class="role">${ARCHETYPE_META[primary].role}</div>
+
+    <div class="attributes">
+      <ul>
+        ${ARCHETYPE_META[primary].traits.map(t => `<li>${t}</li>`).join("")}
+      </ul>
+    </div>
+
+    ${secondary ? `
+      <div class="role">${ARCHETYPE_META[secondary].role}</div>
+      <div class="attributes">
+        <ul>
+          ${ARCHETYPE_META[secondary].traits.map(t => `<li>${t}</li>`).join("")}
+        </ul>
+      </div>
+    ` : ""}
+
+    <div class="scores">
+      ${Object.entries(weights)
+        .sort((a,b) => b[1] - a[1])
+        .map(([k,v]) => `
+          <div class="score-row">
+            <span>${k}</span>
+            <span>${v}%</span>
+          </div>
+        `).join("")}
+    </div>
+
+    <div class="closing">
+      This archetype is not a limit — it is a lens.<br>
+      Others remain present, waiting for their moment.
+    </div>
+
+    <div class="inner-circle-gate">
+    <a href="samsara.html" class="inner-circle-button">
+      Join the Inner Circle
+    </a>
+  </div>
+  `;
 }
-
-const result = JSON.parse(stored);
-
-    const data = ARCHETYPE_TEXT[result.archetype];
-
-    // --- GET GENDER ---
-    const gender = localStorage.getItem("gender") || "male";
-
-    // --- IMAGE PATH ---
-    const archetypeKey = result.archetype.toLowerCase();
-    const imagePath = `assets/images/${archetypeKey}-${gender}.png`;
-
-    const container = document.getElementById("reveal");
-
-    container.innerHTML = `
-      <div class="subtitle">Your Archetype</div>
-      <h1>${data.title}</h1>
-
-      <img
-        class="archetype-image"
-        src="${imagePath}"
-        alt="${data.title} (${gender})"
-      >
-
-      <div class="coherence">
-        Coherence: ${(result.coherence * 100).toFixed(0)}%
-      </div>
-
-      <div class="essence">
-        ${data.essence}
-      </div>
-
-      <div class="axes">
-        ${Object.entries(result.axisProfile)
-          .map(([axis, val]) => `
-            <div class="axis">
-              <strong>${AXIS_LABELS[axis]}</strong>
-              <span>${val.toFixed(2)}</span>
-            </div>
-          `)
-          .join("")}
-      </div>
-
-      <div class="closing">
-        This archetype is not a limit — it is a lens.<br>
-        You may inhabit others over time.<br><br>
-        What matters is how consciously you carry this one.
-      </div>
-    `;
-    
-  </script>
-  <div></div>
-<div class="welcome-gate">
-  <a href="samsara.html" class="welcome-button">
-    Enter the Sacred Circle
-  </a>
-</div>
+</script>
 
 </body>
 </html>

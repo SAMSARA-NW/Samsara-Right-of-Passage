@@ -1,201 +1,245 @@
 /* ======================================================
-   SAMSARA — ARCHETYPE LOGIC ENGINE (REFINED)
-   Clarity preserved. Ambiguity earned.
+   SAMSARA — ARCHETYPE LOGIC ENGINE (v3)
+   Weighted clarity without softening outcomes
 ====================================================== */
 
 /* --------------------
-   AXES (ORDER MATTERS)
+   ARCHETYPES
 -------------------- */
-const AXES = ["E","D","M","T","R","S","I"];
-
-/*
-E — Expression (inward ↔ outward)
-D — Decision (slow ↔ fast)
-M — Meaning (practical ↔ symbolic)
-T — Time (present ↔ narrative)
-R — Relational (independent ↔ communal)
-S — Stability (fluid ↔ structured)
-I — Identity (fixed ↔ fluid)
-*/
+const ARCHETYPES = [
+  "Steward",
+  "Lover",
+  "Jester",
+  "Seeker",
+  "Alchemist",
+  "Sage",
+  "StoryWeaver",
+  "Tradesman",
+  "Catalyst",
+  "Drifter" // special case
+];
 
 /* --------------------
-   AXIS WEIGHTS
+   BASE SCORES
 -------------------- */
-const AXIS_WEIGHTS = {
-  E: 0.9,
-  D: 0.8,
-  M: 1.2,
-  T: 1.1,
-  R: 1.2,
-  S: 1.0,
-  I: 1.3
+const BASE_SCORES = {
+  Steward: 0,
+  Lover: 0,
+  Jester: 0,
+  Seeker: 0,
+  Alchemist: 0,
+  Sage: 0,
+  StoryWeaver: 0,
+  Tradesman: 0,
+  Catalyst: 0,
+  Drifter: 3 // ⚠️ baseline risk
 };
 
 /* --------------------
-   QUESTION → VECTOR MAP
+   QUESTION → SCORE MAP
 -------------------- */
-const QUESTION_VECTORS = {
+const QUESTION_SCORES = {
+  /* PHASE 1 */
   1: {
-    a: { M: 0.25, T: 0.20 },
-    b: { E: 0.25, S: 0.20 },
-    c: { S: 0.30, D: 0.20 },
-    d: { I: 0.30 }
+    a: { Lover: 2, StoryWeaver: 1, Sage: 1 },
+    b: { Seeker: 2, Alchemist: 1, StoryWeaver: 1 },
+    c: { Steward: 2, Tradesman: 1, Sage: 1 }
   },
   2: {
-    a: { T: 0.25, D: -0.15 },
-    b: { D: 0.30, T: -0.15 },
-    c: { S: 0.25, M: 0.15 },
-    d: { I: 0.30 }
+    a: { Tradesman: 2, Steward: 1, Sage: 1 },
+    b: { Seeker: 2, Jester: 1, Catalyst: 1 },
+    c: { StoryWeaver: 2, Lover: 1, Alchemist: 1 }
   },
   3: {
-    a: { M: 0.30, E: -0.15 },
-    b: { E: 0.30, D: 0.15 },
-    c: { S: 0.30 },
-    d: { I: 0.35 }
+    a: { Seeker: 2, Catalyst: 1, StoryWeaver: 1 },
+    b: { Steward: 2, Sage: 1, Tradesman: 1 },
+    c: { Lover: 2, Jester: 1, StoryWeaver: 1 },
+    d: { Drifter: 3 } // bypass
   },
+
+  /* PHASE 2 */
   4: {
-    a: { R: 0.25, E: 0.15 },
-    b: { T: 0.25, E: -0.15 },
-    c: { D: 0.30 },
-    d: { I: 0.25 }
+    a: { Steward: 2, Lover: 1 },
+    b: { Tradesman: 2, Catalyst: 1 },
+    c: { StoryWeaver: 2, Lover: 1 },
+    d: { Seeker: 2, Jester: 1 },
+    e: { Alchemist: 2, Sage: 1 }
   },
   5: {
-    a: { E: -0.25 },
-    b: { R: -0.20 },
-    c: { M: -0.15 },
-    d: { D: -0.20 },
-    e: { E: 0.15, R: -0.15 },
-    f: { T: 0.20 }
+    a: { Lover: 2, Steward: 1 },
+    b: { Catalyst: 2, Tradesman: 1 },
+    c: { StoryWeaver: 2, Sage: 1 },
+    d: { Seeker: 2, Jester: 1 },
+    e: { Alchemist: 2, Sage: 1 }
   },
   6: {
-    a: { M: 0.30 },
-    b: { D: 0.30 },
-    c: { S: 0.30 },
-    d: { I: 0.30 }
+    a: { Steward: 2, Sage: 1 },
+    b: { Lover: 2, StoryWeaver: 1 },
+    c: { Seeker: 2, Alchemist: 1 },
+    d: { Tradesman: 2, Catalyst: 1 },
+    e: { Jester: 2, Seeker: 1 }
   },
   7: {
-    a: { E: 0.30 },
-    b: { S: 0.30 },
-    c: { T: 0.25 },
-    d: { I: 0.25 }
+    a: { Steward: 2, Lover: 1 },
+    b: { Tradesman: 2, Sage: 1 },
+    c: { Seeker: 2, Jester: 1 },
+    d: { Alchemist: 2, StoryWeaver: 1 },
+    e: { Catalyst: 2, Tradesman: 1 }
   },
   8: {
-    a: { S: -0.30 },
-    b: { T: -0.25 },
-    c: { R: -0.30 },
-    d: { I: -0.25 },
-    e: { S: -0.20 },
-    f: { I: 0.30 }
+    a: { Steward: 2, Sage: 1 },
+    b: { Lover: 2, StoryWeaver: 1 },
+    c: { Seeker: 2, Jester: 1 },
+    d: { Sage: 2, Alchemist: 1 },
+    e: { Catalyst: 2, Tradesman: 1 },
+    f: { Drifter: 4 } // bypass
   },
+
+  /* PHASE 3 */
   9: {
-    a: { D: 0.30, S: 0.20 },
-    b: { I: 0.35 },
-    c: { R: 0.30 },
-    d: { M: 0.25, I: 0.25 }
+    a: { Steward: 4 },
+    b: { Lover: 4 },
+    c: { Catalyst: 4 },
+    d: { Tradesman: 4 },
+    e: { StoryWeaver: 4 },
+    f: { Seeker: 4 },
+    g: { Sage: 4 },
+    h: { Alchemist: 4 },
+    i: { Jester: 4 },
+    j: { Drifter: 6 }
+  },
+  10: {
+    a: { Catalyst: 4 },
+    b: { Lover: 4 },
+    c: { Seeker: 4 },
+    d: { Tradesman: 4 },
+    e: { StoryWeaver: 4 },
+    f: { Sage: 4 },
+    g: { Sage: 4 },
+    h: { Alchemist: 4 },
+    i: { Jester: 4 },
+    j: { Drifter: 6 }
+  },
+  11: {
+    a: { Steward: 5 },
+    b: { Lover: 4 },
+    c: { Catalyst: 5 },
+    d: { Tradesman: 4 },
+    e: { StoryWeaver: 4 },
+    f: { Seeker: 4 },
+    g: { Sage: 5 },
+    h: { Alchemist: 5 },
+    i: { Jester: 4 },
+    j: { Drifter: 7 }
+  },
+  12: {
+    a: { Steward: 4 },
+    b: { Lover: 4 },
+    c: { Catalyst: 5 },
+    d: { Tradesman: 4 },
+    e: { StoryWeaver: 4 },
+    f: { Seeker: 4 },
+    g: { Sage: 5 },
+    h: { Alchemist: 5 },
+    i: { Jester: 4 },
+    j: { Drifter: 7 }
+  },
+  13: {
+    a: { Steward: 5 },
+    b: { Lover: 5 },
+    c: { Catalyst: 5 },
+    d: { Tradesman: 5 },
+    e: { StoryWeaver: 5 },
+    f: { Seeker: 5 },
+    g: { Sage: 5 },
+    h: { Alchemist: 5 },
+    i: { Jester: 5 },
+    j: { Drifter: 8 }
   }
 };
-
-/* --------------------
-   ARCHETYPE CENTROIDS
--------------------- */
-const ARCHETYPES = {
-  StoryWeaver: [0.35,0.45,0.75,0.85,0.65,0.30,0.50],
-  Catalyst:    [0.80,0.85,0.55,0.45,0.45,0.85,0.75],
-  Harmonizer:  [0.45,0.50,0.85,0.60,0.85,0.40,0.35],
-  Steward:     [0.30,0.40,0.90,0.70,0.80,0.25,0.25],
-  Analyst:     [0.50,0.75,0.45,0.65,0.30,0.65,0.40],
-  Alchemist:   [0.65,0.65,0.65,0.75,0.65,0.60,0.90]
-};
-
-/* --------------------
-   UTILITIES
--------------------- */
-function clamp(v) {
-  return Math.max(0, Math.min(1, v));
-}
-
-function distance(a, b) {
-  return Math.sqrt(
-    a.reduce((sum, v, i) => {
-      const axis = AXES[i];
-      return sum + AXIS_WEIGHTS[axis] * Math.pow(v - b[i], 2);
-    }, 0)
-  );
-}
 
 /* --------------------
    MAIN CALCULATION
 -------------------- */
 function calculateArchetype() {
 
-  // 1. Initialize axis values
-  const axisValues = {};
-  AXES.forEach(a => axisValues[a] = 0.5);
+  const scores = { ...BASE_SCORES };
 
-  // 2. Apply question vectors
   Object.entries(localStorage)
     .filter(([k]) => k.startsWith("question_"))
     .forEach(([key, choice]) => {
       const qNum = key.split("_")[1];
-      const vectors = QUESTION_VECTORS[qNum];
-      if (!vectors || !vectors[choice]) return;
+      const map = QUESTION_SCORES[qNum];
+      if (!map || !map[choice]) return;
 
-      Object.entries(vectors[choice]).forEach(([axis, val]) => {
-        axisValues[axis] = clamp(axisValues[axis] + val);
+      Object.entries(map[choice]).forEach(([arch, val]) => {
+        scores[arch] += val;
       });
     });
 
-  // 3. Build final vector
-  const finalVector = AXES.map(a => axisValues[a]);
+  /* ---------- RANKING ---------- */
+  const ranked = Object.entries(scores)
+    .sort((a, b) => b[1] - a[1]);
 
-  // 4. Measure distances
-  const distances = Object.entries(ARCHETYPES)
-    .map(([name, vec]) => ({
-      name,
-      d: distance(finalVector, vec)
-    }))
-    .sort((a,b) => a.d - b.d);
+  const [primary, primaryScore] = ranked[0];
+  const [secondary, secondaryScore] = ranked[1];
 
-  const primary   = distances[0];
-  const secondary = distances[1];
-
-  // 5. Dominance check (prevents weak ambiguity)
-  const dominance = secondary.d - primary.d;
-  if (dominance > 0.06) {
-    return finalize(primary.name, primary.d, axisValues, finalVector);
+  /* ---------- DRIFTER OVERRIDE ---------- */
+  if (primary === "Drifter") {
+    return finalize({
+      archetype: "Drifter",
+      scores,
+      ranked,
+      weights: null,
+      coherence: 0
+    });
   }
 
-  // 6. Shapeshifter logic (earned, not default)
-  const identity = axisValues.I;
+  /* ---------- DUAL LOGIC ---------- */
+  const dual =
+    secondary !== "Drifter" &&
+    secondaryScore >= primaryScore * 0.75;
 
-  const isShapeshifter =
-    Math.abs(primary.d - secondary.d) < 0.035 &&
-    identity > 0.68;
+  const archetype = dual
+    ? `${primary}–${secondary}`
+    : primary;
 
-  const archetype = isShapeshifter
-    ? "Shapeshifter"
-    : primary.name;
+  /* ---------- NORMALIZED WEIGHTS (EXCLUDING DRIFTER) ---------- */
+  const nonDrifterTotal = Object.entries(scores)
+    .filter(([k]) => k !== "Drifter")
+    .reduce((sum, [, v]) => sum + v, 0);
 
-  return finalize(archetype, primary.d, axisValues, finalVector);
+  const weights = {};
+  Object.entries(scores).forEach(([k, v]) => {
+    if (k === "Drifter") return;
+    weights[k] = +(v / nonDrifterTotal * 100).toFixed(1);
+  });
+
+  /* ---------- COHERENCE ---------- */
+  const coherence = Math.min(
+    1,
+    primaryScore / (primaryScore + secondaryScore)
+  );
+
+  return finalize({
+    archetype,
+    scores,
+    ranked,
+    weights,
+    coherence
+  });
 }
 
 /* --------------------
    FINALIZE + STORE
 -------------------- */
-function finalize(archetype, distanceScore, axisValues, vector) {
+function finalize(result) {
 
-  const coherence = clamp(1 - distanceScore);
+  localStorage.setItem("samsara_archetype", result.archetype);
+  localStorage.setItem("samsara_scores", JSON.stringify(result.scores));
+  localStorage.setItem("samsara_ranked", JSON.stringify(result.ranked));
+  localStorage.setItem("samsara_weights", JSON.stringify(result.weights));
+  localStorage.setItem("samsara_coherence", result.coherence);
 
-  // Persist once, use everywhere
-  localStorage.setItem("samsara_archetype", archetype);
-  localStorage.setItem("samsara_coherence", coherence);
-  localStorage.setItem("samsara_axisProfile", JSON.stringify(axisValues));
-  localStorage.setItem("samsara_vector", JSON.stringify(vector));
-
-  return {
-    archetype,
-    coherence,
-    axisProfile: axisValues,
-    vector
-  };
+  return result;
 }

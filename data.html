@@ -155,13 +155,12 @@ html, body {
 
 <main class="naming-container" id="naming">
 
-  <h1>Human Design</h1>
+  <h1>Profile</h1>
 
   <p>
-    Last step to incorporate your Human Design, and recieve your current Archetype.<br>
+    Please create your profile, and recieve your current Archetype.<br>
     
-    Now, leave a trace of yourself<br>
-    for continuity.
+  
   </p>
 
   <form class="naming-form" id="namingForm">
@@ -195,16 +194,14 @@ html, body {
 document.addEventListener("DOMContentLoaded", () => {
 
   /* --------------------
-     LOAD STORED RESULT
+     LOAD STORED RESULT (CANONICAL)
   -------------------- */
-  const stored = localStorage.getItem("samsara_result");
+  const archetype = localStorage.getItem("samsara_archetype");
 
-  if (!stored) {
+  if (!archetype) {
     alert("Archetype missing. Please complete the rite again.");
-    throw new Error("Missing samsara_result");
+    throw new Error("Missing samsara_archetype");
   }
-
-  const result = JSON.parse(stored);
 
   /* --------------------
      SUPABASE CLIENT
@@ -240,8 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
       gender: gender,
       birth_date: formData.get("birth_date"),
       birth_place: formData.get("birth_place"),
-      archetype: result.archetype,          // ✅ FIXED
-             // (optional but recommended)
+      archetype: archetype // ✅ canonical + stable
     };
 
     const { error } = await supabaseClient
@@ -260,7 +256,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 </script>
-
 
 
 </body>
