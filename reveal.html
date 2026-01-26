@@ -67,11 +67,11 @@
     }
 
     .subtitle {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 3em;
+      margin-bottom: 2.5em;
     }
 
     .archetype-image {
@@ -92,31 +92,41 @@
 
     .role {
       font-style: italic;
-      margin-bottom: 2em;
       color: var(--accent);
+      margin: 2em 0;
+      line-height: 1.7;
     }
 
     .attributes ul {
       list-style: none;
       padding: 0;
+      margin-bottom: 3em;
     }
 
     .attributes li {
       margin: 0.4em 0;
       color: var(--muted);
+      font-size: 0.9rem;
     }
 
-    .scores {
+    .initiation {
       margin-top: 3em;
-      text-align: left;
+      padding-top: 2em;
+      border-top: 1px solid rgba(245,235,200,0.15);
     }
 
-    .score-row {
-      display: flex;
-      justify-content: space-between;
+    .initiation h3 {
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
       font-size: 0.85rem;
-      padding: 0.4em 0;
-      border-bottom: 1px solid rgba(245,235,200,0.12);
+      margin-bottom: 1.5em;
+      color: var(--accent);
+    }
+
+    .initiation p {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--muted);
     }
 
     .closing {
@@ -126,58 +136,36 @@
       line-height: 1.7;
     }
 
-    /* ---------- INNER CIRCLE GATE ---------- */
-.inner-circle-gate {
-  margin-top: 4.5rem;
-  display: flex;
-  justify-content: center;
-  opacity: 0;
-  animation: gateFadeIn 3s ease forwards;
-  animation-delay: 2.5s;
-}
+    .inner-circle-gate {
+      margin-top: 4.5rem;
+      display: flex;
+      justify-content: center;
+      opacity: 0;
+      animation: gateFadeIn 3s ease forwards;
+      animation-delay: 2.5s;
+    }
 
-.inner-circle-button {
-  padding: 0.9rem 2.6rem;
-  border-radius: 999px;
+    .inner-circle-button {
+      padding: 0.9rem 2.6rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(43,43,43,0.85);
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,255,255,0.65) 60%, rgba(230,225,215,0.45));
+      backdrop-filter: blur(6px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08), inset 0 0 18px rgba(255,255,255,0.6);
+      transition: transform 0.6s ease;
+    }
 
-  font-size: 0.85rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  text-decoration: none;
+    .inner-circle-button:hover {
+      transform: scale(1.06);
+    }
 
-  color: rgba(43,43,43,0.85);
-
-  background:
-    radial-gradient(
-      circle at 30% 30%,
-      rgba(255,255,255,0.95),
-      rgba(255,255,255,0.65) 60%,
-      rgba(230,225,215,0.45) 100%
-    );
-
-  backdrop-filter: blur(6px);
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.08),
-    inset 0 0 18px rgba(255,255,255,0.6);
-
-  transition:
-    transform 0.6s ease,
-    box-shadow 0.6s ease,
-    opacity 0.6s ease;
-}
-
-.inner-circle-button:hover {
-  transform: scale(1.06);
-  box-shadow:
-    0 14px 36px rgba(0,0,0,0.12),
-    inset 0 0 22px rgba(255,255,255,0.75);
-}
-
-@keyframes gateFadeIn {
-  to { opacity: 1; }
-}
-
+    @keyframes gateFadeIn {
+      to { opacity: 1; }
+    }
   </style>
 </head>
 
@@ -205,14 +193,7 @@ const ARCHETYPE_IMAGES = {
   Drifter: { male: "assets/images/drifter.png", female: "assets/images/drifter.png" }
 };
 
-/* ================= LOAD STORED DATA ================= */
-const archetypeRaw = localStorage.getItem("samsara_archetype");
-const gender = localStorage.getItem("gender") === "female" ? "female" : "male";
-const weights = JSON.parse(localStorage.getItem("samsara_weights") || "{}");
-
-const container = document.getElementById("reveal");
-
-/* ================= ARCHETYPE DATA ================= */
+/* ================= META ================= */
 const ARCHETYPE_META = {
   Steward: {
     role: "The one who holds the walls steady — not the one who is seen, but the one everything depends on.",
@@ -235,8 +216,8 @@ const ARCHETYPE_META = {
     traits: ["Transformative", "Innovative", "Intentional", "Bridges spirit & matter", "Subtle"]
   },
   Sage: {
-    role: "The one who sees clearly — speaking truth without embellishment.",
-    traits: ["Insightful", "Calm", "Truth-bound", "Energetically perceptive", "Direct"]
+    role: "The one who bows first — listening to life’s intelligence before acting.",
+    traits: ["Reverent", "Spirit-led", "Wise", "Still", "Guiding"]
   },
   StoryWeaver: {
     role: "The one who sits slightly to the side of the fire, listening — then retelling the night so others know what it meant.",
@@ -252,26 +233,63 @@ const ARCHETYPE_META = {
   }
 };
 
-/* ================= RENDER ================= */
-if (archetypeRaw === "Drifter") {
+/* ================= INITIATIONS ================= */
+const ARCHETYPE_INITIATIONS = {
+  Sage: {
+    title: "The Hill of Reverence",
+    rite: "Sit alone on high ground for two hours. No music. No seeking. Attend only to God, nature, and what listens back."
+  },
+  Steward: {
+    title: "The Vigil of Continuity",
+    rite: "Maintain something that does not belong to you. No recognition. Only care."
+  },
+  Lover: {
+    title: "The Offering of Presence",
+    rite: "Create beauty for someone else without explanation. Stay past discomfort."
+  },
+  Jester: {
+    title: "The Mirror Walk",
+    rite: "Speak lightly but truthfully for one full day. Watch where laughter hides fear."
+  },
+  Seeker: {
+    title: "The Unanswered Path",
+    rite: "Walk alone somewhere unfamiliar. Ask sincere questions. Resolve nothing."
+  },
+  Alchemist: {
+    title: "The Silent Transmutation",
+    rite: "Sit with an unsolved problem in stillness for one hour. Let it change you."
+  },
+  StoryWeaver: {
+    title: "The Night Retelling",
+    rite: "Write a true story of conflict where meaning emerges without blame."
+  },
+  Tradesman: {
+    title: "The Honest Craft",
+    rite: "Build or repair something tangible until fatigue arrives. Stop before perfection."
+  },
+  Catalyst: {
+    title: "The First Strike",
+    rite: "Begin the thing you have delayed. Take one irreversible action."
+  }
+};
 
-  /* -------- DRIFTER (NO NARRATIVE) -------- */
+/* ================= RENDER ================= */
+const archetypeRaw = localStorage.getItem("samsara_archetype");
+const gender = localStorage.getItem("gender") === "female" ? "female" : "male";
+const container = document.getElementById("reveal");
+
+if (archetypeRaw === "Drifter") {
   container.innerHTML = `
     <div class="subtitle">Pattern Detected</div>
     <h1>Drifter</h1>
     <img class="archetype-image" src="assets/images/drifter.png" alt="Drifter">
   `;
-
 } else {
-
-  /* -------- NORMAL / DUAL REVEAL -------- */
   const parts = archetypeRaw.split("–");
   const primary = parts[0];
   const secondary = parts[1] || null;
-
-  const imageSrc =
-    ARCHETYPE_IMAGES[primary] &&
-    ARCHETYPE_IMAGES[primary][gender];
+  const imageSrc = ARCHETYPE_IMAGES[primary]?.[gender];
+  const initiation = ARCHETYPE_INITIATIONS[primary];
 
   container.innerHTML = `
     <div class="subtitle">Your Archetype</div>
@@ -282,44 +300,33 @@ if (archetypeRaw === "Drifter") {
     <div class="role">${ARCHETYPE_META[primary].role}</div>
 
     <div class="attributes">
-      <ul>
-        ${ARCHETYPE_META[primary].traits.map(t => `<li>${t}</li>`).join("")}
-      </ul>
+      <ul>${ARCHETYPE_META[primary].traits.map(t => `<li>${t}</li>`).join("")}</ul>
     </div>
 
     ${secondary ? `
       <div class="role">${ARCHETYPE_META[secondary].role}</div>
       <div class="attributes">
-        <ul>
-          ${ARCHETYPE_META[secondary].traits.map(t => `<li>${t}</li>`).join("")}
-        </ul>
+        <ul>${ARCHETYPE_META[secondary].traits.map(t => `<li>${t}</li>`).join("")}</ul>
       </div>
     ` : ""}
 
-    <div class="scores">
-      ${Object.entries(weights)
-        .sort((a,b) => b[1] - a[1])
-        .map(([k,v]) => `
-          <div class="score-row">
-            <span>${k}</span>
-            <span>${v}%</span>
-          </div>
-        `).join("")}
-    </div>
+    ${initiation ? `
+      <div class="initiation">
+        <h3>${initiation.title}</h3>
+        <p>${initiation.rite}</p>
+      </div>
+    ` : ""}
 
     <div class="closing">
-      This archetype is not a limit — it is a lens.<br>
-      Others remain present, waiting for their moment.
+      This archetype is not a limit — it is a threshold.<br>
+      What matters is whether you step through it.
     </div>
 
     <div class="inner-circle-gate">
-    <a href="samsara.html" class="inner-circle-button">
-      Join the Inner Circle
-    </a>
-  </div>
+      <a href="samsara.html" class="inner-circle-button">Join the Inner Circle</a>
+    </div>
   `;
 }
 </script>
-
 </body>
 </html>
