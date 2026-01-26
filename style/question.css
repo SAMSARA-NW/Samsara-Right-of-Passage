@@ -41,23 +41,35 @@ html, body {
     color: #334455;
   }
   
+ .question {
+  display: none;              /* 🔒 hidden by default */
+  position: relative;
+  max-width: 800px;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s ease, transform 1.2s ease;
+  transform: scale(0.96);
+}
+
+.question.question-active {
+  display: block;             /* ✅ only active one shows */
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+@media (max-width: 768px) {
+  .questions {
+    align-items: flex-start;
+    padding-top: 3rem;
+  }
+
   .question {
-    position: relative;
-    max-width: 800px;
-    width: 100%;
-    opacity: 0;
-    transform: scale(0.94);
-    pointer-events: none;
-    transition: opacity 1.4s ease, transform 1.4s ease;
-    transform: translateY(-4vh) scale(0.94);
+    transform: none; /* no scale tricks on mobile */
   }
-  
-  .question.question-active {
-    opacity: 1;
-    transform: scale(1);
-    pointer-events: auto;
-    transform: translateY(-4vh) scale(1);
-  }
+}
+
   
  #floatingSpecs {
   position: fixed;
