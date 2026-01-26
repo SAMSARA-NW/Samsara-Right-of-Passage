@@ -515,16 +515,28 @@
 
 
 function showQuestion(index) {
-  questions.forEach(q => q.classList.remove("question-active"));
+  questions.forEach(q => {
+    q.classList.remove("question-active");
+    q.style.display = "none";
+  });
 
   const q = questions[index];
   if (!q) return;
 
-  // force layout recalculation
+  q.style.display = "block";
+
+  // force reflow so transitions fire
   q.getBoundingClientRect();
 
   q.classList.add("question-active");
+
+  // 🔑 ensure visibility on mobile
+  q.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
 }
+
 
 
 

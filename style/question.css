@@ -42,7 +42,7 @@ html, body {
   }
   
   .question {
-    position: absolute;
+    position: relative;
     max-width: 800px;
     width: 100%;
     opacity: 0;
