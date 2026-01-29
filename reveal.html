@@ -237,41 +237,47 @@ const ARCHETYPE_META = {
 const ARCHETYPE_INITIATIONS = {
   Sage: {
     title: "The Hill of Reverence",
-    rite: "Sit alone on high ground for two hours. No music. No seeking. Attend only to God, nature, and what listens back."
+    rite: "Sit alone on high ground for an hours. No music. No seeking. Observe cycles. Attend only to God, nature, and what listens back. What does this place obey? Answer Aloud."
   },
   Steward: {
-    title: "The Vigil of Continuity",
-    rite: "Maintain something that does not belong to you. No recognition. Only care."
+    title: "I am held, and I hold.",
+    rite: "Walk the perimeter of the land slowly, carry one found object (stone, branch, earth) the entire walk. Let your pace be dictated by breath, not intention. Complete the journey with the object in hand."
   },
   Lover: {
-    title: "The Offering of Presence",
-    rite: "Create beauty for someone else without explanation. Stay past discomfort."
+    title: "I am in relationship.",
+    rite: "Choose one living being (tree, bush, stream, ant trail). Sit or kneel at its level. Observe for 60 minutes without naming or analysing, Leave a small biodegradable offering (seed, water, breath) "
   },
   Jester: {
     title: "The Mirror Walk",
-    rite: "Speak lightly but truthfully for one full day. Watch where laughter hides fear."
+    rite: "Do something playful. Dance alone, sing nonesense, spin or walk in backwards. If shame appears, exaggerate the play. Laugh deliberately for 60 seconds. Bow to the land."
   },
   Seeker: {
     title: "The Unanswered Path",
-    rite: "Walk alone somewhere unfamiliar. Ask sincere questions. Resolve nothing."
+    rite: "Walk alone somewhere unfamiliar. Ask a sincere question, (What am I not seeing). Resolve nothing."
   },
   Alchemist: {
-    title: "The Silent Transmutation",
-    rite: "Sit with an unsolved problem in stillness for one hour. Let it change you."
+    title: "I arrive one way, I remain another",
+    rite: "Write down one identity you arrived with. Tear or burn it safely. Mix it with earth + water in your hands. Mark forehead or hands with the mud. Sit silently for 20 minutes. Wash hands slowly. Announce: The rules have changed."
   },
   StoryWeaver: {
     title: "The Night Retelling",
-    rite: "Write a true story of conflict where meaning emerges without blame."
+    rite: "Walk alone with the land and a notebook. Choose three locations to stop at. Write down one sentance at each of them (Past, Present, Future). Read them Aloud. Fold the page and keep it till you depart from the land."
   },
   Tradesman: {
     title: "The Honest Craft",
-    rite: "Build or repair something tangible until fatigue arrives. Stop before perfection."
+    rite: "Choose a simple repetitive task (raking leaves, gathering wood, stacking stones). Do it slowly, beautifully, as if it will be seen centuries later. After wash hands consciously. Acknowledge why this task mattered"
   },
   Catalyst: {
     title: "The First Strike",
-    rite: "Begin the thing you have delayed. Take one irreversible action."
+    rite: "On arrival, notice the first place that pulls you. When there wait for the next place to pull you, and then move there without thought. Do this till you feel your journey is complete. After, ask yourself, what changed just because you moved?"
+  },
+  Drifter: {
+    title: "TI choose to arrive—or leave.",
+    rite: "Walk to the edge of the venue. Face outward. leave right away."
   }
+
 };
+
 
 /* ================= RENDER ================= */
 const archetypeRaw = localStorage.getItem("samsara_archetype");
@@ -318,13 +324,20 @@ if (archetypeRaw === "Drifter") {
     ` : ""}
 
     <div class="closing">
-      This archetype is not a limit — it is a threshold.<br>
+      This is not a limit — it is a threshold.<br>
       What matters is whether you step through it.
     </div>
 
     <div class="inner-circle-gate">
-      <a href="samsara.html" class="inner-circle-button">Join the Inner Circle</a>
-    </div>
+  <a
+    href="https://samsaracommunity.org"
+    class="inner-circle-button"
+    target="_blank"
+    rel="noopener">
+    Enter the Community
+  </a>
+</div>
+
   `;
 }
 </script>
